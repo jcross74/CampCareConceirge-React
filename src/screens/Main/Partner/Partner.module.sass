@@ -1,0 +1,42 @@
+@import ../../../styles/helpers
+
+.section
+  padding: 80px 0
+  position: relative
+
+.container
+  display: grid
+  grid-template-columns: repeat(1, 1fr)
+  gap: 40px
+  align-items: center
+  max-width: 1280px
+  margin: 0 auto
+  padding: 0 80px
+
+  +t
+       .container
+       grid-template-columns: 1fr
+       gap: 20px
+
+.partner_content
+  display: flex
+  flex-direction: column
+  gap: 24px
+
+.title
+  font-size: 48px
+  font-weight: 700
+  line-height: 1.2
+
+.description
+  font-size: 24px
+  font-weight: 400
+  line-height: 1.6
+  // color: var(--n2)
+  color: #4a4a4a
+
+.partner_image
+  width: auto
+  height: auto
+  border-radius: 16px
+  overflow: hidden

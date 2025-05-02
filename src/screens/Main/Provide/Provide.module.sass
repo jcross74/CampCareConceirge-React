@@ -1,0 +1,69 @@
+@import ../../../styles/helpers
+
+.section
+  padding: 80px 0
+  position: relative
+
+.container
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 80px
+  align-items: center
+  max-width: 1280px
+  margin: 0 auto
+  padding: 0 80px
+
+  +t
+       .container
+       grid-template-columns: 1fr
+       gap: 48px
+
+
+.provide_content
+  display: flex
+  flex-direction: column
+  gap: 24px
+
+.title
+  font-size: 48px
+  font-weight: 700
+  line-height: 1.2
+
+.description
+  font-size: 18px
+  font-weight: 400
+  line-height: 1.6
+  // color: var(--n2)
+  color: #4a4a4a
+
+.list
+  list-style: none
+  padding: 0
+  margin: 0
+  display: flex
+  flex-direction: column
+  gap: 16px
+
+  li
+    display: flex
+    align-items: center
+    font-weight: 600
+    font-size: 20px
+
+    svg
+      margin-right: 12px
+      fill: var(--orange-500)
+
+.button
+  background-color: #DC2626
+  color: white
+  padding: 12px 24px
+  border-radius: 8px
+  font-weight: 600
+  width: 200px
+
+.provide_image
+  width: 100%
+  height: auto
+  border-radius: 16px
+  overflow: hidden

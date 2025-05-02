@@ -1,0 +1,122 @@
+@import ../../styles/helpers
+
+.background
+    position: relative
+    height: 50vh
+    background-image: url("../../../public/images/content/header-background.png")
+    background-size: cover
+    background-position: center
+    background-repeat: no-repeat
+    
+    +x
+        margin: -32px -24px 0
+    +d
+        height: 50vh
+    +m
+        height: 40vh
+        margin: -24px -16px 0
+    img
+        width: 100%
+        height: 100%
+        object-fit: cover
+
+.card
+    max-width: 1200px
+    margin: -64px auto 0
+    +m
+        margin-top: -188px
+
+.control
+    display: block
+    align-items: center
+    margin-bottom: 32px
+    +m
+        flex-wrap: wrap
+
+.nav
+    display: block
+    margin-right: auto
+    +m
+        width: 100%
+        margin: 0 0 16px
+
+.link
+    padding: 8px 16px
+    border-radius: 8px
+    +base1-s
+    color: $n4
+    transition: all .2s
+    +m
+        flex-grow: 1
+    &:hover,
+    &.active
+        color: $n7
+        +dark
+            color: $n1
+    &.active
+        background: $n3
+        +dark
+            background: $n6
+    &:not(:last-child)
+        margin-right: 8px
+        +m
+            margin-right: 0
+
+.dropdownBox
+    +m
+        flex-grow: 1
+
+.filters
+    margin-left: 16px
+    +m
+        margin-left: 12px
+
+.products
+    display: flex
+    flex-wrap: wrap
+    margin: -32px -12px 0
+    +a
+        display: block
+        margin: 0
+
+.product
+    flex: 0 0 calc(33.333% - 24px)
+    width: calc(33.333% - 24px)
+    margin: 32px 12px 0
+    +t
+        flex: 0 0 calc(50% - 24px)
+        width: calc(50% - 24px)
+    +a
+        width: 100%
+        margin: 24px 0 0
+
+.foot
+    margin-top: 40px
+    text-align: center
+    +x
+        margin-top: 32px
+    +m
+        margin-top: 24px
+
+.overlayText
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: white
+  text-align: center
+  z-index: 1
+  padding: 0 24px
+
+  h1
+    font-size: 3.7em
+    font-weight: 600
+    line-height: 1.2
+
+  +t
+    h1
+      font-size: 32px
+
+  +m
+    h1
+      font-size: 24px

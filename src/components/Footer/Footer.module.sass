@@ -1,0 +1,67 @@
+@import ../../styles/helpers
+
+.section
+  background-color: #B91C1C
+
+.container
+  display: grid
+  gap: 80px
+
+.content
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+
+.title
+  color: #FFFFFF
+
+.email
+  margin-top: 24px
+  text-transform: uppercase
+  color: #FFFFFF
+
+.divider
+  background-color: var(--orange-600)
+  height: 1px
+  width: 100%
+
+.business_info
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+
+.socials
+  display: flex
+  gap: 8px
+
+.social svg
+  fill: #FFFFFF
+
+.address, .phone, .copyright
+  color: #FFFFFF
+
+.phone
+  margin-top: 8px
+
+.links
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 24px
+
+.link
+  color: #FFFFFF
+
+@media (max-width: 1024px)
+  .container
+    gap: 64px
+
+@media (max-width: 768px)
+  .container
+    gap: 48px
+
+@media (max-width: 480px)
+  .content
+    grid-template-columns: 1fr
+    gap: 48px
+
+  .business_info
+    gap: 32px
