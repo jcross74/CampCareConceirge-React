@@ -5,9 +5,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./styles/app.sass";
 import Page from "./components/Page";
 import Main from "./screens/Main";
+import About from "./screens/About";
 import Home from "./screens/Home";
 import Results from "./screens/Main/Results";
 import CampDetails from "./screens/Main/Details";
+import Resources from "./screens/Resources";
+import FindCamps from "./screens/FindCamps";
+import Contact from "./screens/Contact";
 import CampsDashboard from "./screens/ProductsDashboard";
 import NewProduct from "./screens/NewProduct";
 import Drafts from "./screens/Drafts";
@@ -234,6 +238,11 @@ function App() {
         <Route path="/results" element={<Results />} />
         <Route path="/details" element={<CampDetails />} />
         <Route path="/logout" element={<SignIn />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/find-camps" element={<FindCamps />} />
+        <Route path="/contact" element={<Contact />} />
+        
       </Routes>
     </>
   );

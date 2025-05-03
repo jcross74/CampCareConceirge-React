@@ -9,7 +9,7 @@ const Provide = () => {
         <div className={styles.section}>
             <div className={styles.container}>
             <div className={styles.provide_image}>
-                <img
+                <img className={styles.fullWidth}
                     src="/images/content/WhatWeProvide.png"
                     alt="Kids doing science activity"
                 />
