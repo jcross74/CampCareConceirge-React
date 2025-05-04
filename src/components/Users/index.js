@@ -8,17 +8,17 @@ const users = [
   {
     title: "Camp Achva",
     avatar: "/images/content/avatar-camp1.png",
-    url: "/message-center",
+    url: "#",
   },
   {
     title: "Kids Give Back",
     avatar: "/images/content/avatar-camp2.png",
-    url: "/message-center",
+    url: "#",
   },
   {
     title: "Merritt Academy",
     avatar: "/images/content/avatar-camp3.png",
-    url: "/message-center",
+    url: "#",
   },
 ];
 
@@ -35,7 +35,7 @@ const Users = ({ className }) => {
             <div className={styles.title}>{x.title}</div>
           </Link>
         ))}
-        <Link className={styles.all} to="/customers/customer-list">
+        <Link className={styles.all} to="providers/overview">
           <div className={styles.icon}>
             <Icon name="arrow-right" size="24" />
           </div>

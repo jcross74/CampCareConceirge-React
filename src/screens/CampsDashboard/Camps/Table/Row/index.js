@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import styles from "./Row.module.sass";
 import Checkbox from "../../../../../components/Checkbox";
 import Control from "../../Control";
-import ModalProduct from "../../../../../components/ModalProduct";
+import { Link } from "react-router-dom";
 
 const Row = ({ item, value, onChange, up }) => {
     const [visibleActions, setVisibleActions] = useState(false);
-    const [visibleModalProduct, setVisibleModalProduct] = useState(false);
 
     return (
         <>
@@ -22,10 +21,7 @@ const Row = ({ item, value, onChange, up }) => {
                     />
                 </div>
                 <div className={styles.col}>
-                    <div
-                        className={styles.item}
-                        onClick={() => setVisibleModalProduct(true)}
-                    >
+                    <Link to="#" className={styles.item}>
                         <div className={styles.preview}>
                             <img
                                 srcSet={`${item.image2x} 2x`}
@@ -37,7 +33,7 @@ const Row = ({ item, value, onChange, up }) => {
                             <div className={styles.product}>{item.product}</div>
                             <div className={styles.date}>{item.date}</div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
                 <div className={styles.col}>
                     <div
@@ -78,10 +74,6 @@ const Row = ({ item, value, onChange, up }) => {
                     />
                 </div>
             </div>
-            <ModalProduct
-                visible={visibleModalProduct}
-                onClose={() => setVisibleModalProduct(false)}
-            />
         </>
     );
 };

@@ -4,7 +4,7 @@ import TooltipGlodal from "../../components/TooltipGlodal";
 import Overview from "./Overview";
 import ProductActivity from "./ProductActivity";
 import ProductViews from "./ProductViews";
-import Camps from "./Products";
+import Camps from "./Camps";
 
 const CampsDashboard = () => {
     return (

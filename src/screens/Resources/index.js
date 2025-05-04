@@ -18,6 +18,7 @@ const Resources = () => {
   return (
     <>
       <MainNavigation />
+      <div className={styles.mainContainer}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1>Resources</h1>
@@ -26,7 +27,7 @@ const Resources = () => {
       <div className={styles.container}>
         <section className={styles.resourcesSection}>
           <div className={styles.intro}>
-            <h2>Explore Our Resources</h2>
+            <h1>Explore Our Resources</h1>
             <p>
               Discover a curated list of resources to help you navigate the world of camps and activities.
             </p>
@@ -38,6 +39,7 @@ const Resources = () => {
             onSubmit={handleSubmit}
           />
         </section>
+      </div>
       </div>
       <Footer />
     </>

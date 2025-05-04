@@ -53,6 +53,7 @@ const Table = ({ items, legend, title }) => {
             up={items.length - index <= 2}
             value={selectedFilters.includes(x.id)}
             onChange={() => handleChange(x.id)}
+            linkTo="#"
           />
         ))}
       </div>

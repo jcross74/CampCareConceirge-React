@@ -12,9 +12,9 @@ import CampDetails from "./screens/Main/Details";
 import Resources from "./screens/Resources";
 import FindCamps from "./screens/FindCamps";
 import Contact from "./screens/Contact";
-import CampsDashboard from "./screens/ProductsDashboard";
-import NewProduct from "./screens/NewProduct";
-import Drafts from "./screens/Drafts";
+import CampsDashboard from "./screens/CampsDashboard";
+import NewCamp from "./screens/NewCamp";
+import Drafts from "./screens/PendingCamps";
 import Released from "./screens/Released";
 import Comments from "./screens/Comments";
 import Scheduled from "./screens/Scheduled";
@@ -57,9 +57,9 @@ function App() {
     <>
       {isAdminRoute ? (
         <Navigation isAuthenticated={isAuthenticated} />
-      ) : (
+      ) : location.pathname !== "/sign-in" && location.pathname !== "/sign-up" ? (
         <MainNavigation onOpen={() => {}} />
-      )}
+      ) : null}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/admin">
@@ -83,7 +83,7 @@ function App() {
             path="/admin/camps/add"
             element={
               <Page title="New Camp">
-                <NewProduct />
+                <NewCamp />
               </Page>
             }
           />

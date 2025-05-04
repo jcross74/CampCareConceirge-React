@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import cn from "classnames";
-import styles from "./Drafts.module.sass";
+import styles from "./PendingCamps.module.sass";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
 import Icon from "../../components/Icon";

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import cn from "classnames";
 import styles from "./Overview.module.sass";
 import TooltipGlodal from "../../../components/TooltipGlodal";
@@ -144,7 +145,8 @@ const Overview = ({ className }) => {
         <div className={styles.overview}>
           <div className={styles.list}>
             {items.map((x, index) => (
-              <div
+              <Link
+                to="#"
                 className={styles.item}
                 key={index}
                 style={{ backgroundColor: x.background }}
@@ -164,11 +166,10 @@ const Overview = ({ className }) => {
                       />
                     </div>
                     <div className={styles.counter}>{x.counter}</div>
-                    
                   </div>
                   <Chart className={styles.chart} item={x} />
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

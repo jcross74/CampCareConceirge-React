@@ -1,6 +1,6 @@
 import React from "react";
 import cn from "classnames";
-import styles from "./Products.module.sass";
+import styles from "./Camps.module.sass";
 import { Link } from "react-router-dom";
 import Icon from "../../../../Icon";
 import Product from "../../../../Product";

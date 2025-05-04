@@ -18,6 +18,7 @@ const FindCamps = () => {
     return (
         <>
         <MainNavigation />
+        <div className={styles.container}>
         <section className={styles.hero}>
             <div className={styles.heroContent}>
             <h1>Find Your Perfect Camp</h1>
@@ -38,6 +39,7 @@ const FindCamps = () => {
                 onSubmit={handleSubmit}
             />
             </section>
+        </div>
         </div>
         <Footer />
         </>

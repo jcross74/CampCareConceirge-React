@@ -8,7 +8,7 @@ const Entry = ({ onConfirm }) => {
   return (
     <div className={styles.entry}>
       <div className={styles.head}>
-        <div className={styles.info}>Sign up with Open account</div>
+        <div className={styles.info}>Sign up with your social media account</div>
         <div className={styles.btns}>
           <button className={cn("button-stroke", styles.button)}>
             <img src="/images/content/google.svg" alt="Google" />
@@ -26,7 +26,7 @@ const Entry = ({ onConfirm }) => {
         </div>
       </div>
       <div className={styles.body}>
-        <div className={styles.info}>Or continue with email address</div>
+        <div className={styles.info}>Or sign up with your email address</div>
         <TextInput
           className={styles.field}
           name="email"

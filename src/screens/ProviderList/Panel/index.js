@@ -10,7 +10,7 @@ const Panel = () => {
         <Icon name="check-all" size="24" />
         
       </div>
-      <button className={cn("button", styles.button)}>Message</button>
+      <button className={cn("button", styles.button)}>Delete Provider</button>
     </div>
   );
 };

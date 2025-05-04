@@ -1,7 +1,7 @@
 // This file is the Camps List with the checkboxes next the camp listings
 
 import React, { useState, useEffect } from "react";
-import styles from "./Products.module.sass";
+import styles from "./Camps.module.sass";
 import cn from "classnames";
 import Card from "../../../components/Card";
 import Form from "../../../components/Form";
@@ -71,7 +71,7 @@ const Camps = () => {
     <Card
       className={styles.card}
       title="Camps"
-      classTitle={cn("title-purple", styles.title)}
+      classTitle={cn("title-red", styles.title)}
       classCardHead={styles.head}
       head={
         <>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./NewProduct.module.sass";
+import styles from "./NewCamp.module.sass";
 import TooltipGlodal from "../../components/TooltipGlodal";
 import Modal from "../../components/Modal";
 import Schedule from "../../components/Schedule";
@@ -15,7 +15,7 @@ import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore"
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { app } from "../../firebase";
 
-const NewProduct = () => {
+const NewCamp = () => {
   // Visibility states
   const [visiblePreview, setVisiblePreview] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
@@ -213,4 +213,4 @@ const NewProduct = () => {
   );
 };
 
-export default NewProduct;
+export default NewCamp;

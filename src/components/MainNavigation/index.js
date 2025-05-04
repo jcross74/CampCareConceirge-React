@@ -32,7 +32,7 @@ const MainNavigation = ({ onOpen }) => {
       <div>
         <div className={styles.branding}>
         <Link to="/" className={styles.link}>
-            <p>Camp Care Concierge</p>
+        <img src="images/CampCare_Logo.png" alt="Logo" className={styles.logo} />
           </Link>
         </div>
       </div>

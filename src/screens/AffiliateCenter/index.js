@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./AffiliateCenter.module.sass";
 import TooltipGlodal from "../../components/TooltipGlodal";
 import Snapshot from "./Snapshot";
-import PopularProducts from "../../components/PopularProducts";
+import LatestCamps from "../../components/LatestCamps";
 import PerformanceByDay from "./PerformanceByDay";
 import Table from "./Table";
 import CreateLink from "./CreateLink";
@@ -18,7 +18,7 @@ const AffiliateCenter = () => {
         </div>
         <div className={styles.col}>
           <CreateLink className={styles.card} />
-          <PopularProducts className={styles.card} views="8" />
+          <LatestCamps className={styles.card} views="8" />
         </div>
       </div>
       <TooltipGlodal />

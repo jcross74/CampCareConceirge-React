@@ -56,7 +56,7 @@ const Row = ({ item, value, onChange }) => {
                         className={styles.item}
                         onClick={() => {
                             console.log("Clicked camp:", item.campName, "Host:", item.campHost, "ID:", item.campID);
-                            setVisibleModalProduct(true);
+                            
                             setSelectedCampName(item.campName);
                             setSelectedCampHost(item.campHost);
                         }}
@@ -100,13 +100,7 @@ const Row = ({ item, value, onChange }) => {
                 </div>
                 <div className={styles.col}>
                     {item.date}
-                    <Control
-                        className={styles.control}
-                        startDate={startDate}
-                        setStartDate={setStartDate}
-                        startTime={startTime}
-                        setStartTime={setStartTime}
-                    />
+                    
                 </div>
             </div>
             <ModalProduct

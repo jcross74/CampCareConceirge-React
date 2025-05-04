@@ -2,15 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import cn from "classnames";
-import styles from "./PopularProducts.module.sass";
+import styles from "./PopularCamps.module.sass";
 import { Link } from "react-router-dom";
 import Card from "../Card";
-import ModalProduct from "../ModalProduct";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../../firebase"; // Adjust this path if your firebase config is elsewhere
 
-const PopularProducts = ({ className, views }) => {
-  const [visibleModalProduct, setVisibleModalProduct] = useState(false);
+const LatestCamps = ({ className, views }) => {
   const [camps, setCamps] = useState([]);
 
   useEffect(() => {
@@ -61,10 +59,10 @@ const PopularProducts = ({ className, views }) => {
             {camps.map(
               (x, index) =>
                 views > index && (
-                  <div
+                  <Link
+                    to="#"
                     className={styles.item}
                     key={index}
-                    onClick={() => setVisibleModalProduct(true)}
                   >
                     <div className={styles.preview}>
                       <img
@@ -86,7 +84,7 @@ const PopularProducts = ({ className, views }) => {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 )
             )}
           </div>
@@ -98,12 +96,8 @@ const PopularProducts = ({ className, views }) => {
           </Link>
         </div>
       </Card>
-      <ModalProduct
-        visible={visibleModalProduct}
-        onClose={() => setVisibleModalProduct(false)}
-      />
     </>
   );
 };
 
-export default PopularProducts;
+export default LatestCamps;

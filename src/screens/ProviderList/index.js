@@ -39,25 +39,8 @@ const ProviderList = () => {
               name="search"
               icon="search"
             />
-            <div className={styles.nav}>
-              {navigation.map((x, index) => (
-                <button
-                  className={cn(styles.link, {
-                    [styles.active]: index === activeIndex,
-                  })}
-                  onClick={() => setActiveIndex(index)}
-                  key={index}
-                >
-                  {x}
-                </button>
-              ))}
-            </div>
-            <Filters
-              className={styles.filters}
-              title="Showing 10 of 24 providers"
-            >
-              <Settings />
-            </Filters>
+            
+            
           </>
         }
       >

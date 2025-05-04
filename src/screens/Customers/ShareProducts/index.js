@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import cn from "classnames";
-import styles from "./ShareProducts.module.sass";
+import styles from "./ShareCamps.module.sass";
 import { Link } from "react-router-dom";
 import Card from "../../../components/Card";
 import Icon from "../../../components/Icon";

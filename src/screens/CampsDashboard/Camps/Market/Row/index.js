@@ -25,7 +25,7 @@ const Row = ({ item, value, onChange, up }) => {
         <div className={styles.col}>
           <div
             className={styles.item}
-            onClick={() => setVisibleModalProduct(true)}
+            
           >
             <div className={styles.preview}>
               <img
