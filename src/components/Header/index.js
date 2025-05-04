@@ -27,8 +27,7 @@ const Header = ({ onOpen }) => {
       </button>
       <div className={styles.control} onClick={() => setVisible(false)}>
        
-        <Messages className={styles.messages} />
-        <Notification className={styles.notification} />
+        
         <User className={styles.user} />
       </div>
       {/* <div className={styles.btns}>

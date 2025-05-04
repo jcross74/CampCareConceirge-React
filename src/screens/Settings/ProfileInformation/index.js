@@ -56,13 +56,7 @@ const ProfileInformation = ({ className }) => {
           tooltip="Maximum 100 characters. No HTML or emoji allowed"
           required
         />
-        <Editor
-          state={content}
-          onChange={setContent}
-          classEditor={styles.editor}
-          label="Bio"
-          tooltip="Description"
-        />
+        
       </div>
     </Item>
   );
