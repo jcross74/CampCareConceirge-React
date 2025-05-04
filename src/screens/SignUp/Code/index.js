@@ -10,44 +10,34 @@ const Code = () => {
         <div className={styles.info}>
           We just send you a verify code. Check your inbox to get them.
         </div>
-        <div className={styles.fieldset}>
+       
           <div className={styles.field}>
             <input
               className={styles.input}
-              name="number1"
-              type="tel"
-              autocomplete="off"
+              name="newPassword"
+              type="password"
+              autoComplete="new-password"
+              placeholder="Password"
               required
             />
+
+            
           </div>
-          <div className={styles.field}>
+
+          <div className={styles.field2}>
+            
+
             <input
               className={styles.input}
-              name="number2"
-              type="tel"
-              autocomplete="off"
+              name="reenterPassword"
+              type="password"
+              autoComplete="reenter-password"
+              placeholder="Re-enter Password"
               required
             />
           </div>
-          <div className={styles.field}>
-            <input
-              className={styles.input}
-              name="number3"
-              type="tel"
-              autocomplete="off"
-              required
-            />
-          </div>
-          <div className={styles.field}>
-            <input
-              className={styles.input}
-              name="number4"
-              type="tel"
-              autocomplete="off"
-              required
-            />
-          </div>
-        </div>
+         
+        
         <div className={styles.errorNote}>
           The code you entered is incorrect.
         </div>
