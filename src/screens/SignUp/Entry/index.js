@@ -35,7 +35,16 @@ const Entry = ({ onConfirm }) => {
           required
           icon="mail"
         />
-        <button className={cn("button", styles.button)} onClick={onConfirm}>
+        <button
+          className={cn("button", styles.button)}
+          onClick={() => {
+            const emailInput = document.querySelector('input[name="email"]');
+            if (emailInput && emailInput.value) {
+              localStorage.setItem("signupEmail", emailInput.value);
+              onConfirm();
+            }
+          }}
+        >
           Continue
         </button>
         <div className={styles.note}>
