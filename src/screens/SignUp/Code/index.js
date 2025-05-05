@@ -26,7 +26,7 @@ const Code = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, passwordCreate);
       const user = userCredential.user;
 
-      // Create Firestore record
+      // Create Firestore record first
       await setDoc(doc(db, "users", user.uid), {
         authID: user.uid,
         avatar: "",
