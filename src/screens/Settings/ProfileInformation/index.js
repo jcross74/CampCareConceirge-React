@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
 import cn from "classnames";
 import styles from "./ProfileInformation.module.sass";
 import Item from "../Item";
@@ -8,6 +9,15 @@ import Editor from "../../../components/Editor";
 
 const ProfileInformation = ({ className }) => {
   const [content, setContent] = useState();
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user && user.email) {
+      setEmail(user.email);
+    }
+  }, []);
 
   return (
     <Item
@@ -17,7 +27,7 @@ const ProfileInformation = ({ className }) => {
     >
       <div className={styles.profile}>
         <div className={styles.avatar}>
-          <img src="/images/content/avatar.jpg" alt="Avatar" />
+          <img src="/images/content/Avatar-User.png" alt="Avatar" />
           <button className={styles.remove}>
             <Icon name="close" />
           </button>
@@ -32,14 +42,25 @@ const ProfileInformation = ({ className }) => {
         <button className={cn("button-stroke", styles.button)}>Remove</button>
       </div>
       <div className={styles.fieldset}>
+      <div className={styles.row}>
         <TextInput
           className={styles.field}
-          label="Display name"
-          name="display-name"
+          label="First Name"
+          name="first-name"
           type="text"
           tooltip="Maximum 100 characters. No HTML or emoji allowed"
           required
         />
+        <TextInput
+          className={styles.field}
+          label="Last Name"
+          name="last-name"
+          type="text"
+          tooltip="Maximum 100 characters. No HTML or emoji allowed"
+          required
+        />
+        </div>
+        
         <TextInput
           className={styles.field}
           label="Email"
@@ -47,15 +68,9 @@ const ProfileInformation = ({ className }) => {
           type="email"
           tooltip="Maximum 100 characters. No HTML or emoji allowed"
           required
+          value={email}
         />
-        <TextInput
-          className={styles.field}
-          label="Location"
-          name="location"
-          type="text"
-          tooltip="Maximum 100 characters. No HTML or emoji allowed"
-          required
-        />
+        
         
       </div>
     </Item>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Table.module.sass";
 import cn from "classnames";
 import Checkbox from "../../../components/Checkbox";
@@ -6,13 +6,23 @@ import Loader from "../../../components/Loader";
 import Row from "./Row";
 
 // data
-import { providers } from "../../../mocks/providers";
+import { fetchProviders } from "../../../mocks/providers";
 
 const Table = ({ className, activeTable, setActiveTable }) => {
-  const [chooseAll, setСhooseAll] = useState(false);
-  const [activeId, setActiveId] = useState(providers[0].id);
+  const [providers, setProviders] = useState([]);
+  const [activeId, setActiveId] = useState(null);
 
+  const [chooseAll, setСhooseAll] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
+
+  useEffect(() => {
+    const loadProviders = async () => {
+      const data = await fetchProviders();
+      setProviders(data);
+      if (data.length > 0) setActiveId(data[0].id);
+    };
+    loadProviders();
+  }, []);
 
   const handleChange = (id) => {
     if (selectedFilters.includes(id)) {
@@ -40,7 +50,7 @@ const Table = ({ className, activeTable, setActiveTable }) => {
           <div className={styles.col}>State</div>
           <div className={styles.col}>Status</div>
         </div>
-        {providers.map((x, index) => (
+        {Array.isArray(providers) && providers.map((x, index) => (
           <Row
             item={x}
             key={index}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import cn from "classnames";
 import OutsideClickHandler from "react-outside-click-handler";
 import styles from "./User.module.sass";
@@ -7,23 +7,12 @@ import Icon from "../../Icon";
 import { getAuth, signOut } from "firebase/auth";
 
 const items = [
+  
   {
     menu: [
       {
-        title: "Profile",
-        url: "/profile",
-      },
-      {
-        title: "Your reviews",
-        url: "/profile/reviews",
-      },
-    ],
-  },
-  {
-    menu: [
-      {
-        title: "Account settings",
-        url: "/settings",
+        title: "Settings",
+        url: "admin/settings",
       },
       {
         title: "Log out",
@@ -44,13 +33,14 @@ const items = [
 const User = ({ className }) => {
   const [visible, setVisible] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {
         // Sign-out successful. Redirect to the site's root.
-        window.location.href = "/";
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error logging out:", error);
@@ -65,7 +55,7 @@ const User = ({ className }) => {
         })}
       >
         <button className={styles.head} onClick={() => setVisible(!visible)}>
-          <img src="/images/content/Avatar-User.png" alt="Avatar" />
+          <img src="/images/avatar-menu.png" alt="Avatar" />
         </button>
         <div className={styles.body}>
           {items.map((item, index) => (

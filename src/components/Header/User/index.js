@@ -12,10 +12,7 @@ const items = [
                 title: "Home",
                 url: "../",
             },
-            {
-                title: "Profile",
-                url: "/settings",
-            },
+
         ],
     },
    
@@ -23,7 +20,7 @@ const items = [
         menu: [
             {
                 title: "Account settings",
-                url: "/settings",
+                url: "/admin/settings",
             },
             {
                 title: "Log out",

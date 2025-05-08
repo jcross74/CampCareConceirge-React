@@ -96,24 +96,16 @@ const Sidebar = ({ className, onClose }) => {
             icon: "lightning",
             dropdown: [
                 {
-                    title: "Activity",
-                    url: "/admin/data/activity",
-                },
-                {
                     title: "Format",
-                    url: "/admin/data/format",
-                },
-                {
-                    title: "Reviews",
-                    url: "/admin/data/reviews",
+                    url: "/admin/format",
                 },
                 {
                     title: "Seasons",
-                    url: "/admin/data/seasons",
+                    url: "/admin/seasons",
                 },
                 {
                     title: "Tags",
-                    url: "/admin/data/tags",
+                    url: "/admin/tags",
                 },
             ],
         },

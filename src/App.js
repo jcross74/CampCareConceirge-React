@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate, usLocation, Link } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./styles/app.sass";
@@ -36,12 +36,14 @@ import Statements from "./screens/Statements";
 import Shop from "./screens/Shop";
 import PageList from "./screens/PageList";
 import UserList from "./screens/UsersList";
+import TagsList from "./screens/Data/Tags";
 
 import Navigation from "./components/Navigation";
 import MainNavigation from "./components/MainNavigation";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
   const auth = getAuth();
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
@@ -58,8 +60,19 @@ function App() {
       {isAdminRoute ? (
         <Navigation isAuthenticated={isAuthenticated} />
       ) : location.pathname !== "/sign-in" && location.pathname !== "/sign-up" ? (
-        <MainNavigation onOpen={() => {}} />
+        <MainNavigation onOpen={() => setIsBurgerOpen(true)} />
       ) : null}
+
+      {isBurgerOpen && (
+        <div className="mobileMenu">
+          <Link to="/about">About Us</Link>
+          <Link to="/find-camps">Find a Camp</Link>
+          <Link to="/resources">Resources</Link>
+          <Link to="/contact">Contact Us</Link>
+          <button onClick={() => setIsBurgerOpen(false)}>Close</button>
+        </div>
+      )}
+
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/admin">
@@ -127,6 +140,15 @@ function App() {
               </Page>
             }
           />
+          <Route
+            path="/admin/tags"
+            element={
+              <Page title="Tags">
+                <TagsList />
+              </Page>
+            }
+          />
+
           <Route
             path="/admin/providers/overview"
             element={

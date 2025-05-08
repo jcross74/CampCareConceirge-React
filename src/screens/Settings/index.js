@@ -1,11 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import cn from "classnames";
 import styles from "./Settings.module.sass";
 import TooltipGlodal from "../../components/TooltipGlodal";
 import Dropdown from "../../components/Dropdown";
 import ProfileInformation from "./ProfileInformation";
 import Login from "./Login";
-
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 
 const Settings = () => {
   const navigation = [
@@ -31,6 +32,28 @@ const Settings = () => {
   const scrollToLogin = useRef(null);
   const scrollToNotifications = useRef(null);
   const scrollToPayment = useRef(null);
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const auth = getAuth();
+      const db = getFirestore();
+      const currentUser = auth.currentUser;
+
+      if (currentUser) {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("authID", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          setUserData(querySnapshot.docs[0].data());
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleClick = (x, index) => {
     setActiveIndex(index);
@@ -67,7 +90,7 @@ const Settings = () => {
               })}
             >
               <div className={styles.anchor} ref={scrollToProfile}></div>
-              <ProfileInformation />
+              <ProfileInformation userData={userData} />
             </div>
             <div
               className={cn(styles.item, {
@@ -75,7 +98,7 @@ const Settings = () => {
               })}
             >
               <div className={styles.anchor} ref={scrollToLogin}></div>
-              <Login />
+              <Login userData={userData} />
             </div>
             <div
               className={cn(styles.item, {

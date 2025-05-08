@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import cn from "classnames";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -6,33 +6,40 @@ import styles from "./User.module.sass";
 import Icon from "../../Icon";
 import { getAuth, signOut } from "firebase/auth";
 
-const items = [
-  {
-    menu: [
-      {
-        title: "Profile",
-        url: "/profile",
-      },
-      {
-        title: "Admin Dashboard",
-        url: "/admin",
-      },
-    ],
-  },
-  {
-    // New menu group for Admin Dashboard
-    menu: [
-      {
-        title: "Logout",
-        url: "/logout",
-      },
-    ],
-  },
-];
-
 const User = ({ className }) => {
   const [visible, setVisible] = useState(false);
   const { pathname } = useLocation();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const items = isAuthenticated
+    ? [
+        {
+          menu: [
+            { title: "Profile", url: "/admin/settings" },
+            { title: "Admin Dashboard", url: "/admin" },
+          ],
+        },
+        {
+          menu: [{ title: "Logout", url: null }],
+        },
+      ]
+    : [
+        {
+          menu: [
+            { title: "Sign In", url: "/signin" },
+            { title: "Sign Up", url: "/signup" },
+          ],
+        },
+      ];
 
   const handleLogout = () => {
     const auth = getAuth();
@@ -54,13 +61,13 @@ const User = ({ className }) => {
         })}
       >
         <button className={styles.head} onClick={() => setVisible(!visible)}>
-          <img src="/images/content/Avatar-User.png" alt="Avatar" />
+          <img src="/images/avatar-menu.png" alt="Avatar" />
         </button>
         <div className={styles.body}>
           {items.map((item, index) => (
             <div className={styles.menu} key={index}>
               {item.menu.map((x, idx) =>
-                x.url ? (
+                x.url && x.title !== "Logout" ? (
                   <NavLink
                     className={cn(styles.item, {
                       [styles.color]: x.color,
@@ -78,7 +85,7 @@ const User = ({ className }) => {
                     className={styles.item}
                     onClick={() => {
                       setVisible(false);
-                      if (x.title === "Log out") {
+                      if (x.title === "Log out" || x.title === "Logout") {
                         handleLogout();
                       }
                     }}

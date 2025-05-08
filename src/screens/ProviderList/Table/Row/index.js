@@ -3,6 +3,12 @@ import cn from "classnames";
 import Checkbox from "../../../../components/Checkbox";
 import Balance from "../../../../components/Balance";
 
+const formatPhoneNumber = (phone) => {
+  const cleaned = ('' + phone).replace(/\D/g, '');
+  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+  return match ? `(${match[1]}) ${match[2]}-${match[3]}` : phone;
+};
+
 const Row = ({
     item,
     value,
@@ -39,7 +45,7 @@ const Row = ({
                         
                     >
                         <div className={styles.avatar}>
-                            <img src={item.avatar} alt="Avatar" />
+                            <img src={item.avatar || "../../images/content/Camp_Image.png"} alt="Avatar" />
                         </div>
                         <div className={styles.details}>
                             <div className={styles.user}>{item.providerName}</div>
@@ -49,7 +55,7 @@ const Row = ({
                     </div>
                 </div>
                 <div className={styles.col}>
-                    <div className={styles.email}>{item.providerPhone}</div>
+                    <div className={styles.email}>{formatPhoneNumber(item.providerPhone)}</div>
                 </div>
                 <div className={styles.col}>
                     <div className={styles.email}>
