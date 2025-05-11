@@ -47,12 +47,31 @@
   color: #666
   line-height: 1.6
 
-+m
-  .container
-    padding: 40px 20px
 
-  .resourcesSection
-    padding-top: 40px
+.accordion.shadow
+  :global(.accordion-item)
+    border: none
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+    border-radius: 0.5rem
+    margin-bottom: 1rem
+    overflow: hidden
+    background-color: #fff
 
-  .intro h2
-    font-size: 24px
+  :global(.accordion-header)
+    padding: 1rem 1.25rem
+    font-size: 1rem
+    font-weight: 500
+    cursor: pointer
+    display: flex
+    justify-content: space-between
+    align-items: center
+    transition: background-color 0.2s ease
+
+  :global(.accordion-header:hover)
+    background-color: #f9fafb
+
+  :global(.accordion-body)
+    padding: 1rem 1.25rem
+    font-size: 0.95rem
+    color: #4b5563
+    background-color: #fff
