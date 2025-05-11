@@ -5,34 +5,20 @@ import styles from "./Resources.module.sass";
 import TextInput from "../../components/TextInput";
 import Footer from "../../components/Footer";
 import MainNavigation from "../../components/MainNavigation";
-import { Accordion, AccordionItem } from "@heroui/react";
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 
 const Resources = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (searchValue) => {
-    console.log("Form submitted with value:", searchValue);
-    // Add your search logic here
-  };
-
-  const data = {
-    rows: [
-      {
-        title: "What is Camp Care Concierge?",
-        content: "Camp Care Concierge helps parents discover and connect with camps and activities that best suit their child’s interests."
-      },
-      {
-        title: "How do I find a camp?",
-        content: "Use the search bar or explore categories to browse available camps. You can filter by location, age group, or camp type."
-      },
-      {
-        title: "Is there a cost to use the service?",
-        content: "Camp Care Concierge is free for parents. Providers may pay to list or promote their camps."
-      }
-    ]
-  };
-
+  
   return (
     <>
       <MainNavigation />
@@ -50,17 +36,46 @@ const Resources = () => {
           
           <div className={styles.faq}>
             <h2 className={styles.faqTitle}>Frequently Asked Questions</h2>
-            <Accordion variant="shadow" className={cn(styles.accordion, styles.shadow)}>
-              {data.rows.map((item, index) => (
-                <AccordionItem
-                  key={index}
-                  aria-label={`accordion-${index}`}
-                  title={item.title}
-                >
-                  {item.content}
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Typography component="span">Accordion 1</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Accordion 2</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Accordion 3</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+  
           </div>
         </section>
       </div>

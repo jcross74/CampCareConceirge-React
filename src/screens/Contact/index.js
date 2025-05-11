@@ -63,10 +63,8 @@ const Contact = () => {
               </div>
               <form className={styles.form} onSubmit={handleSubmit}>
                 <h3>Contact Form</h3>
-                <div className={styles.row}>
-                  <TextInput name="firstName" placeholder="First Name" />
-                  <TextInput name="lastName" placeholder="Last Name" />
-                </div>
+                <TextInput name="firstName" placeholder="First Name" />
+                <TextInput name="lastName" placeholder="Last Name" />
                 <TextInput name="email" type="email" placeholder="Email" />
                 <TextInput name="phone" type="tel" placeholder="Phone Number" />
                 <TextInput name="message" placeholder="Your Message" textarea rows={4} />
