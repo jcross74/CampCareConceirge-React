@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { getAuth } from "firebase/auth";
+import React, { useState } from "react";
 import cn from "classnames";
 import styles from "./ProfileInformation.module.sass";
 import Item from "../Item";
@@ -7,17 +6,16 @@ import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
 import Editor from "../../../components/Editor";
 
-const ProfileInformation = ({ className }) => {
+const ProfileInformation = ({
+  className,
+  nameFirst,
+  nameLast,
+  email,
+  setNameFirst,
+  setNameLast,
+  handleSave,
+}) => {
   const [content, setContent] = useState();
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user && user.email) {
-      setEmail(user.email);
-    }
-  }, []);
 
   return (
     <Item
@@ -42,25 +40,28 @@ const ProfileInformation = ({ className }) => {
         <button className={cn("button-stroke", styles.button)}>Remove</button>
       </div>
       <div className={styles.fieldset}>
-      <div className={styles.row}>
-        <TextInput
-          className={styles.field}
-          label="First Name"
-          name="first-name"
-          type="text"
-          tooltip="Maximum 100 characters. No HTML or emoji allowed"
-          required
-        />
-        <TextInput
-          className={styles.field}
-          label="Last Name"
-          name="last-name"
-          type="text"
-          tooltip="Maximum 100 characters. No HTML or emoji allowed"
-          required
-        />
+        <div className={styles.row}>
+          <TextInput
+            className={styles.field}
+            label="First Name"
+            name="first-name"
+            type="text"
+            tooltip="Maximum 100 characters. No HTML or emoji allowed"
+            required
+            value={nameFirst}
+            onChange={(e) => setNameFirst(e.target.value)}
+          />
+          <TextInput
+            className={styles.field}
+            label="Last Name"
+            name="last-name"
+            type="text"
+            tooltip="Maximum 100 characters. No HTML or emoji allowed"
+            required
+            value={nameLast}
+            onChange={(e) => setNameLast(e.target.value)}
+          />
         </div>
-        
         <TextInput
           className={styles.field}
           label="Email"
@@ -69,10 +70,10 @@ const ProfileInformation = ({ className }) => {
           tooltip="Maximum 100 characters. No HTML or emoji allowed"
           required
           value={email}
+          readOnly
         />
-        
-        
       </div>
+      
     </Item>
   );
 };

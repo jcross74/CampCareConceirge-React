@@ -9,7 +9,7 @@ import Image from "../../components/Image";
 // Import Firebase Auth functions and your app initialization
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../../firebase"; // Adjust the path if necessary
-import { getDoc, setDoc, doc } from "firebase/firestore";
+import { getDoc, setDoc, doc, query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 
 const SignIn = () => {
@@ -47,10 +47,11 @@ const SignIn = () => {
       console.log("Google signed in user:", result.user);
       navigate("/");
       // Check if user exists in Firestore and create if not
-      const userRef = doc(db, "users", result.user.uid);
-      const userSnap = await getDoc(userRef);
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
+      const q = query(collection(db, "users"), where("authID", "==", result.user.uid));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        const newUserRef = doc(db, "users", result.user.uid);
+        await setDoc(newUserRef, {
           authID: result.user.uid,
           avatar: "",
           email: result.user.email,

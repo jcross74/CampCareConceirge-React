@@ -6,7 +6,8 @@ import Dropdown from "../../components/Dropdown";
 import ProfileInformation from "./ProfileInformation";
 import Login from "./Login";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, updateDoc } from "firebase/firestore";
+import Cookies from "js-cookie";
 
 const Settings = () => {
   const navigation = [
@@ -35,29 +36,57 @@ const Settings = () => {
 
   const [userData, setUserData] = useState(null);
 
+  // Add state for first name, last name, and email
+  const [nameFirst, setNameFirst] = useState("");
+  const [nameLast, setNameLast] = useState("");
+  const [email, setEmail] = useState("");
+
   useEffect(() => {
     const fetchUser = async () => {
-      const auth = getAuth();
       const db = getFirestore();
-      const currentUser = auth.currentUser;
-
-      if (currentUser) {
+      const userUID = Cookies.get("userUID");
+      if (userUID) {
         const usersRef = collection(db, "users");
-        const q = query(usersRef, where("authID", "==", currentUser.uid));
+        const q = query(usersRef, where("authID", "==", userUID));
         const querySnapshot = await getDocs(q);
-
         if (!querySnapshot.empty) {
-          setUserData(querySnapshot.docs[0].data());
+          const data = querySnapshot.docs[0].data();
+          setUserData(data);
+          setNameFirst(data.nameFirst || "");
+          setNameLast(data.nameLast || "");
+          setEmail(data.email || "");
         }
       }
     };
-
     fetchUser();
   }, []);
 
   const handleClick = (x, index) => {
     setActiveIndex(index);
     x.action();
+  };
+  // Save handler
+  const handleSave = async () => {
+    const db = getFirestore();
+    const userUID = Cookies.get("userUID");
+    if (!userUID) return;
+
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("authID", "==", userUID));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0];
+      const docRef = userDoc.ref;
+      const updates = {};
+      if (nameFirst !== userDoc.data().nameFirst) updates.nameFirst = nameFirst;
+      if (nameLast !== userDoc.data().nameLast) updates.nameLast = nameLast;
+
+      if (Object.keys(updates).length > 0) {
+        await updateDoc(docRef, updates);
+        console.log("Changes have been saved.");
+      }
+    }
   };
   return (
     <>
@@ -90,7 +119,14 @@ const Settings = () => {
               })}
             >
               <div className={styles.anchor} ref={scrollToProfile}></div>
-              <ProfileInformation userData={userData} />
+              <ProfileInformation
+                userData={userData}
+                nameFirst={nameFirst}
+                nameLast={nameLast}
+                email={email}
+                setNameFirst={setNameFirst}
+                setNameLast={setNameLast}
+              />
             </div>
             <div
               className={cn(styles.item, {
@@ -117,7 +153,7 @@ const Settings = () => {
               
             </div>
           </div>
-          <button className={cn("button", styles.button)}>Save</button>
+          <button className={cn("button", styles.button)} onClick={handleSave}>Save</button>
         </div>
       </div>
       <TooltipGlodal />
