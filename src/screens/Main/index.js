@@ -1,6 +1,6 @@
 // Main Front Facing page of the site (User Homepage)
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import cn from "classnames";
 import styles from "./Main.module.sass";
@@ -19,7 +19,7 @@ import Benefits from "./Benefits";
 import Partner from "./Partner";
 import Form from "../../components/Form";
 
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 
 // data
@@ -28,11 +28,47 @@ import { followers } from "../../mocks/followers";
 
 const intervals = ["Most recent", "Most new", "Most popular"];
 
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+};
+
 const Main = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [sorting, setSorting] = useState(intervals[0]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkUserRole = async () => {
+      const userUID = getCookie("userUID");
+      console.log("Cookie value for userUID:", userUID);
+      if (!userUID) return;
+
+      try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("authID", "==", userUID));
+        const snapshot = await getDocs(q);
+        console.log("Number of user records returned:", snapshot.size);
+
+        if (snapshot.empty) {
+          document.cookie = "role=0; path=/;";
+          console.log("Cookie set: role=0");
+        } else {
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            document.cookie = `role=${data.role}; path=/;`;
+            console.log("Cookie set: role=" + data.role);
+          });
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+      }
+    };
+
+    checkUserRole();
+  }, []);
 
   const handleSubmit = async (searchValue) => {
     console.log("Form submitted with value:", searchValue);

@@ -28,6 +28,9 @@ const SignIn = () => {
       console.log("Signed in user:", userCredential.user);
       // Redirect after successful sign in
       navigate("/");
+      // Write user UID to cookie
+      document.cookie = `userUID=${userCredential.user.uid}; path=/;`;
+      console.log("Cookie set: userUID=" + userCredential.user.uid);
     } catch (error) {
       console.error("Error signing in:", error);
       setErrorMessage("Invalid email or password. Please try again.");
@@ -41,6 +44,9 @@ const SignIn = () => {
       const result = await signInWithPopup(auth, provider);
       console.log("Google signed in user:", result.user);
       navigate("/");
+      // Write user UID to cookie
+      document.cookie = `userUID=${result.user.uid}; path=/;`;
+      console.log("Cookie set: userUID=" + result.user.uid);
     } catch (error) {
       console.error("Error signing in with Google:", error);
       setErrorMessage("Unable to sign in with Google. Please try again.");

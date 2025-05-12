@@ -9,11 +9,13 @@ import Image from "../Image";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "../../firebase"; // adjust path if needed
 import Cookies from "js-cookie";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const SidebarMain = ({ className, onClose }) => {
     const [visibleHelp, setVisibleHelp] = useState(false);
     const [visible, setVisible] = useState(false);
     const [pendingCount, setPendingCount] = useState("0");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const { pathname } = useLocation();
 
@@ -33,6 +35,27 @@ const SidebarMain = ({ className, onClose }) => {
 
         fetchPendingCount();
     }, []);
+
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsAuthenticated(!!user);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    const handleSignOut = () => {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+            setIsAuthenticated(false);
+            Cookies.remove("role");
+            Cookies.remove("userUID");
+            onClose(); // optionally close sidebar
+        });
+    };
+
+    // Retrieve user role from cookies
+    const userRole = Cookies.get("role");
 
     const navigation = [
         {
@@ -64,12 +87,35 @@ const SidebarMain = ({ className, onClose }) => {
             icon: "lightning",
             url: "/contact",
         },
-        {
-            title: "Sign In",
-            slug: "sign-in",
-            icon: "profile-circle",
-            url: "/sign-in",
-        },
+        ...(isAuthenticated && userRole === "1"
+            ? [{
+                title: "Admin Dashboard",
+                slug: "admin-dashboard",
+                icon: "document",
+                url: "/admin/",
+            }]
+            : []),
+        ...(isAuthenticated && userRole === "2"
+            ? [{
+                title: "Camp Dashboard",
+                slug: "camp-dashboard",
+                icon: "document",
+                url: "/admin/",
+            }]
+            : []),
+        ...(
+            isAuthenticated ? [{
+                title: "Log Out",
+                slug: "log-out",
+                icon: "logout",
+                action: handleSignOut,
+            }] : [{
+                title: "Sign In",
+                slug: "sign-in",
+                icon: "profile-circle",
+                url: "/sign-in",
+            }]
+        )
     ];
 
     return (
@@ -91,19 +137,30 @@ const SidebarMain = ({ className, onClose }) => {
                     />
                 </Link>
                 <div className={styles.menu}>
-                    {navigation.map((x, index) => (
-                        <NavLink
-                            className={cn(styles.item, {
-                                [styles.active]: pathname === x.url,
-                            })}
-                            to={x.url}
-                            key={index}
-                            onClick={onClose}
-                        >
-                            <Icon name={x.icon} size="24" />
-                            {x.title}
-                        </NavLink>
-                    ))}
+                    {navigation.map((x, index) =>
+                        x.url ? (
+                            <NavLink
+                                className={cn(styles.item, {
+                                    [styles.active]: pathname === x.url,
+                                })}
+                                to={x.url}
+                                key={index}
+                                onClick={onClose}
+                            >
+                                <Icon name={x.icon} size="24" />
+                                {x.title}
+                            </NavLink>
+                        ) : (
+                            <button
+                                className={styles.item}
+                                onClick={x.action}
+                                key={index}
+                            >
+                                <Icon name={x.icon} size="24" />
+                                {x.title}
+                            </button>
+                        )
+                    )}
                 </div>
                 <button
                     className={styles.toggle}

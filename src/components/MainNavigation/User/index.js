@@ -7,6 +7,13 @@ import Icon from "../../Icon";
 import { getAuth, signOut } from "firebase/auth";
 
 const User = ({ className }) => {
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+  };
+
   const [visible, setVisible] = useState(false);
   const { pathname } = useLocation();
 
@@ -20,12 +27,15 @@ const User = ({ className }) => {
     return () => unsubscribe();
   }, []);
 
+  const role = getCookie("role");
+
   const items = isAuthenticated
     ? [
         {
           menu: [
             { title: "Profile", url: "/admin/settings" },
-            { title: "Admin Dashboard", url: "/admin" },
+            ...(role === "1" ? [{ title: "Admin Dashboard", url: "/admin" }] : []),
+            ...(role === "2" ? [{ title: "Camp Dashboard", url: "/admin" }] : []),
           ],
         },
         {
@@ -45,6 +55,9 @@ const User = ({ className }) => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {
+        // Clear cookies before redirecting.
+        document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        document.cookie = "userUID=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
         // Sign-out successful. Redirect to the site's root.
         window.location.href = "/";
       })
