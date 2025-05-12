@@ -9,6 +9,8 @@ import Image from "../../components/Image";
 // Import Firebase Auth functions and your app initialization
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../../firebase"; // Adjust the path if necessary
+import { getDoc, setDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const SignIn = () => {
   const heightWindow = use100vh();
@@ -44,6 +46,21 @@ const SignIn = () => {
       const result = await signInWithPopup(auth, provider);
       console.log("Google signed in user:", result.user);
       navigate("/");
+      // Check if user exists in Firestore and create if not
+      const userRef = doc(db, "users", result.user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          authID: result.user.uid,
+          avatar: "",
+          email: result.user.email,
+          memberSince: new Date(),
+          nameFirst: "",
+          nameLast: "",
+          role: "3",
+        });
+        console.log("New user record created in Firestore.");
+      }
       // Write user UID to cookie
       document.cookie = `userUID=${result.user.uid}; path=/;`;
       console.log("Cookie set: userUID=" + result.user.uid);
@@ -66,7 +83,7 @@ const SignIn = () => {
         </Link>
         <div className={cn("h2", styles.title)}>Sign in</div>
         <div className={styles.head}>
-          <div className={styles.subtitle}>Sign up with your Social account</div>
+          <div className={styles.subtitle}>Sign in with your Social account</div>
           <div className={styles.btns}>
             <button onClick={handleGoogleSignIn} className={cn("button-stroke", styles.button)}>
               <img src="/images/content/google.svg" alt="Google" />

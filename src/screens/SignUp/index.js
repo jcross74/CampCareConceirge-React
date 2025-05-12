@@ -10,7 +10,7 @@ import Image from "../../components/Image";
 // Firebase imports
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { app } from "../../firebase"; // Ensure this path correctly points to your Firebase config file
+import { app } from "../../firebase"; 
 
 const items = [
   "Unlimited product uploads",
@@ -71,7 +71,7 @@ const handleGoogleSignUp = async () => {
       avatar: "",
       email: user.email,
       memberSince: serverTimestamp(),
-      role: "1",
+      role: "3",
     });
 
     // Redirect to the site's root after successful Google sign up
@@ -100,7 +100,7 @@ const handleGoogleSignUp = async () => {
               className={styles.pic}
               src="/images/logo-dark.png"
               srcDark="/images/logo-light.png"
-              alt="Core"
+              alt="Camp Care Concierge"
             />
           </Link>
           <div className={styles.info}>
