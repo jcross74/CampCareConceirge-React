@@ -74,30 +74,9 @@ const About = () => {
         </div>
       </section>
 
-      <section className={styles.locations}>
-        <h3>Locations We Cover</h3>
-        <div className={styles.locationList}>
-          <span>Falls Church</span>
-          <span>Alexandria</span>
-          <span>Springfield</span>
-          <span>McLean</span>
-          <span>Chantilly</span>
-          <span>Great Falls</span>
-          <span>Herndon</span>
-        </div>
-      </section>
+      
 
-      <section className={styles.newsletter}>
-        <h3>Join Our Newsletter</h3>
-        <p>
-          Sign up for our newsletter to receive the latest local updates and
-          recommendations delivered to your inbox.
-        </p>
-        <div className={styles.form}>
-          <input type="email" placeholder="Your email" />
-          <button className="button-red">Subscribe</button>
-        </div>
-      </section>
+      
 </div>
       <Footer />
     </>

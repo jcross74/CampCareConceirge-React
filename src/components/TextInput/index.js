@@ -40,7 +40,11 @@ const TextInput = ({
         </div>
       )}
       <div className={styles.wrap}>
-        <input className={cn(classInput, styles.input)} {...props} />
+        {props.textarea ? (
+          <textarea className={cn(classInput, styles.input)} {...props} />
+        ) : (
+          <input className={cn(classInput, styles.input)} {...props} />
+        )}
         {icon && (
           <div className={styles.icon}>
             <Icon name={icon} size="24" />{" "}

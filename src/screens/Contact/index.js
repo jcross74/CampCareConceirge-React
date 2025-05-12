@@ -30,10 +30,10 @@ const Contact = () => {
         };
 
         emailjs.send(
-            "YOUR_SERVICE_ID",     // replace with your EmailJS service ID
-            "YOUR_TEMPLATE_ID",    // replace with your EmailJS template ID
+            "service_4qs3thx",     // replace with your EmailJS service ID
+            "template_4o1mb2e",    // replace with your EmailJS template ID
             templateParams,
-            "YOUR_PUBLIC_KEY"      // replace with your EmailJS public key
+            "RsGElpQg75OeWUHDe"      // replace with your EmailJS public key
         )
         .then((result) => {
             console.log("Email successfully sent!", result.text);
