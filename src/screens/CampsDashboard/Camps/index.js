@@ -1,6 +1,7 @@
 // This file is the Camps List with the checkboxes next the camp listings
 
 import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import styles from "./Camps.module.sass";
 import cn from "classnames";
 import Card from "../../../components/Card";
@@ -57,6 +58,11 @@ const Camps = () => {
 
   useEffect(() => {
     const loadMarket = async () => {
+      const cachedData = Cookies.get("marketData");
+      if (cachedData) {
+        setMarketItems(JSON.parse(cachedData));
+        return;
+      }
       const data = await fetchMarketData();
       setMarketItems(data);
     };

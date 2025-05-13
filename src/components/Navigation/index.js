@@ -32,23 +32,12 @@ const Navigation = ({ onOpen }) => {
       <div>
         <div className={styles.branding}>
         <Link to="/" className={styles.link}>
-        <img src="../images/CampCare_Logo_Dark.png" alt="Logo" className={styles.logo} />
+        <img src="../../images/CampCare_Logo_Dark.png" alt="Logo" className={styles.logo} />
           </Link>
         </div>
       </div>
       <div className={styles.btns}>
-        <Link className={styles.link} to="/about">
-          About Us
-        </Link>
-        <Link className={styles.link} to="/find-camps">
-          Find a Camp
-        </Link>
-        <Link className={styles.link} to="/resources">
-          Resources
-        </Link>
-        <Link className={styles.link} to="/contact">
-          Contact Us
-        </Link>
+        
         {isAuthenticated && <User className={styles.user} />}
         {/* Render Sign In button only if the user is not authenticated */}
         {!isAuthenticated && (

@@ -11,17 +11,18 @@ import Schedule from "../../Schedule";
 import Control from "./Control";
 import { useNavigate } from "react-router-dom";
 
-const Row = ({ item, value, onChange }) => {
+const Row = ({ item }) => {
 
     const navigate = useNavigate();
     const [startDate, setStartDate] = useState(new Date());
     const [startTime, setStartTime] = useState(new Date());
-    
+
     const [selectedCampName, setSelectedCampName] = useState("");
     const [selectedCampHost, setSelectedCampHost] = useState("");
 
     const [visibleModalProduct, setVisibleModalProduct] = useState(false);
     const [visibleModalSchedule, setVisibleModalSchedule] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     const actions = [
         {
@@ -47,18 +48,15 @@ const Row = ({ item, value, onChange }) => {
                 <div className={styles.col}>
                     <Checkbox
                         className={styles.checkbox}
-                        value={value}
-                        onChange={onChange}
+                        value={checked}
+                        onChange={() => setChecked(!checked)}
                     />
                 </div>
                 <div className={styles.col}>
                     <div
                         className={styles.item}
                         onClick={() => {
-                            console.log("Clicked camp:", item.campName, "Host:", item.campHost, "ID:", item.campID);
-                            
-                            setSelectedCampName(item.campName);
-                            setSelectedCampHost(item.campHost);
+                            navigate("/admin/camps/edit", { state: { campID: item.campID } });
                         }}
                     >
                         <div className={styles.preview}>

@@ -1,4 +1,4 @@
-import { getDocs, collection, query, where } from "firebase/firestore";
+import { getDocs, collection, query, where, orderBy } from "firebase/firestore";
 import { db } from "../firebase"; 
 import { progress } from "../utils";
 import Cookies from "js-cookie";
@@ -13,13 +13,13 @@ export const fetchMarketData = async () => {
     }
   }
 
-  const snapshot = await getDocs(collection(db, "camps"));
+  const snapshot = await getDocs(query(collection(db, "camps"), orderBy("campModified", "desc")));
   const market = [];
 
   snapshot.forEach((doc, index) => {
     const data = doc.data();
-    const image = data.campImage?.[0] || "/images/content/placeholder-pic.png";
-    const image2x = data.campImage?.[0] || "/images/content/placeholder-pic@2x.png";
+    const image = data.campImage?.[0] || "/images/content/Camp_Image.png";
+    const image2x = data.campImage?.[0] || "/images/content/Camp_Image@2x.png";
 
     market.push({
       id: index,
@@ -44,14 +44,14 @@ export const fetchMarketData = async () => {
 
 export const fetchReleasedData = async () => {
   const snapshot = await getDocs(
-    query(collection(db, "camps"), where("campStatus", "==", "Approved"))
+    query(collection(db, "camps"), where("campStatus", "==", "Approved"), orderBy("campModified", "desc"))
   );
   const released = [];
 
   snapshot.forEach((doc, index) => {
     const data = doc.data();
-    const image = data.campImage?.[0] || "/images/content/placeholder-pic.png";
-    const image2x = data.campImage?.[0] || "/images/content/placeholder-pic@2x.png";
+    const image = data.campImage?.[0] || "/images/content/Camp_Image.png";
+    const image2x = data.campImage?.[0] || "/images/content/Camp_Image@2x.png";
 
     released.push({
       id: index,

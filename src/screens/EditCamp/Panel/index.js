@@ -1,5 +1,7 @@
 import React from "react";
 import cn from "classnames";
+import Cookies from "js-cookie";
+import { fetchMarketData } from "../../../mocks/market";
 import styles from "./Panel.module.sass";
 import Icon from "../../../components/Icon";
 import Actions from "../../../components/Actions";
@@ -28,6 +30,13 @@ const Panel = ({ setVisiblePreview, setVisibleSchedule, campModified, onUpdate }
     },
   ];
 
+  const handleClick = async () => {
+    await onUpdate();
+    const updatedMarketData = await fetchMarketData();
+    Cookies.set("marketData", JSON.stringify(updatedMarketData), { expires: 1 / 1440 });
+    window.location.reload();
+  };
+
   return (
     <div className={cn("panel", styles.panel)}>
       <div className={styles.info}>
@@ -39,7 +48,7 @@ const Panel = ({ setVisiblePreview, setVisibleSchedule, campModified, onUpdate }
           <span>Delete</span>
           <Icon name="trash" size="24" />
         </button>
-        <button className={cn("button", styles.button)} onClick={onUpdate}>
+        <button className={cn("button", styles.button)} onClick={handleClick}>
           Update now
         </button>
         

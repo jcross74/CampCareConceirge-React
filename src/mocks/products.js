@@ -10,13 +10,13 @@ export const fetchPendingProducts = async () => {
   const products = [];
 
   if (snapshot.empty) {
-    console.warn("No pending camps found in Firestore.");
+    console.warn("No pending camps found.");
   }
 
   snapshot.forEach((doc, index) => {
     const data = doc.data();
-    const image = data.campImage?.[0] || "/images/content/placeholder-pic.png";
-    const image2x = data.campImage?.[0] || "/images/content/placeholder-pic@2x.png";
+    const image = data.campImage?.[0] || "/images/content/Camp_Image.png";
+    const image2x = data.campImage?.[0] || "/images/content/Camp_Image@2x.png";
 
     products.push({
       id: index,
