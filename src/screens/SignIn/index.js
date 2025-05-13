@@ -7,7 +7,7 @@ import TextInput from "../../components/TextInput";
 import Image from "../../components/Image";
 
 // Import Firebase Auth functions and your app initialization
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider } from "firebase/auth";
 import { app } from "../../firebase"; // Adjust the path if necessary
 import { getDoc, setDoc, doc, query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -71,6 +71,38 @@ const SignIn = () => {
     }
   };
 
+  const handleAppleSignIn = async () => {
+    try {
+      const provider = new OAuthProvider("apple.com");
+      const result = await signInWithPopup(auth, provider);
+      console.log("Apple signed in user:", result.user);
+      navigate("/");
+
+      // Check if user exists in Firestore and create if not
+      const q = query(collection(db, "users"), where("authID", "==", result.user.uid));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        const newUserRef = doc(db, "users", result.user.uid);
+        await setDoc(newUserRef, {
+          authID: result.user.uid,
+          avatar: "",
+          email: result.user.email,
+          memberSince: new Date(),
+          nameFirst: "",
+          nameLast: "",
+          role: "3",
+        });
+        console.log("New user record created in Firestore.");
+      }
+
+      document.cookie = `userUID=${result.user.uid}; path=/;`;
+      console.log("Cookie set: userUID=" + result.user.uid);
+    } catch (error) {
+      console.error("Error signing in with Apple:", error);
+      setErrorMessage("Unable to sign in with Apple. Please try again.");
+    }
+  };
+
   return (
     <div className={styles.login} style={{ minHeight: heightWindow }}>
       <div className={styles.wrapper}>
@@ -90,7 +122,7 @@ const SignIn = () => {
               <img src="/images/content/google.svg" alt="Google" />
               Google
             </button>
-            <button className={cn("button-stroke", styles.button)}>
+            <button onClick={handleAppleSignIn} className={cn("button-stroke", styles.button)}>
               <Image
                 className={styles.pic}
                 src="/images/content/apple-dark.svg"
@@ -128,12 +160,12 @@ const SignIn = () => {
               Sign in
             </button>
           </form>
-          {errorMessage && <div className="login-feedback">{errorMessage}</div>}
+          {errorMessage && <div className={styles.loginFeedback}>{errorMessage}</div>}
           <div className={styles.note}>
             This site is protected by reCAPTCHA and the Google Privacy Policy.
           </div>
           <div className={styles.info}>
-            Don’t have an account?{" "}
+            Don’t have an Camp Care Concierge account?{" "}
             <Link className={styles.link} to="/sign-up">
               Sign up
             </Link>
