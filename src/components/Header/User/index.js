@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import cn from "classnames";
 import OutsideClickHandler from "react-outside-click-handler";
 import styles from "./User.module.sass";
 import Icon from "../../Icon";
+import { getAuth, signOut } from "firebase/auth";
+import Cookies from "js-cookie";
 
 const items = [
     {
@@ -15,15 +17,24 @@ const items = [
 
         ],
     },
+    {
+        menu: [
+            {
+                title: "Admin Dashboard",
+                url: "/admin/",
+            },
+
+        ],
+    },
    
     {
         menu: [
             {
-                title: "Account settings",
+                title: "Profile",
                 url: "/admin/settings",
             },
             {
-                title: "Log out",
+                title: "Logout",
             },
         ],
     },
@@ -32,6 +43,7 @@ const items = [
 const User = ({ className }) => {
     const [visible, setVisible] = useState(false);
     const { pathname } = useLocation();
+    const navigate = useNavigate();
 
     return (
         <OutsideClickHandler onOutsideClick={() => setVisible(false)}>
@@ -44,7 +56,7 @@ const User = ({ className }) => {
                     className={styles.head}
                     onClick={() => setVisible(!visible)}
                 >
-                    <img src="/images/content/avatar.jpg" alt="Avatar" />
+                    <img src="/images/avatar-menu.png" alt="Avatar" />
                 </button>
                 <div className={styles.body}>
                     {items.map((item, index) => (
@@ -68,7 +80,19 @@ const User = ({ className }) => {
                                 ) : (
                                     <button
                                         className={styles.item}
-                                        onClick={() => setVisible(false)}
+                                        onClick={() => {
+                                            setVisible(false);
+                                            const auth = getAuth();
+                                            signOut(auth)
+                                                .then(() => {
+                                                    Cookies.remove("UserUID");
+                                                    Cookies.remove("role");
+                                                    navigate("/");
+                                                })
+                                                .catch((error) => {
+                                                    console.error("Error signing out:", error);
+                                                });
+                                        }}
                                         key={index}
                                     >
                                         {x.title}

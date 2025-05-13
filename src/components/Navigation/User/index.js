@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import cn from "classnames";
@@ -15,7 +16,7 @@ const items = [
         url: "admin/settings",
       },
       {
-        title: "Log out",
+        title: "Logout",
       },
     ],
   },
@@ -36,6 +37,8 @@ const User = ({ className }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    Cookies.remove("UserUID");
+    Cookies.remove("role");
     const auth = getAuth();
     signOut(auth)
       .then(() => {
@@ -79,7 +82,7 @@ const User = ({ className }) => {
                     className={styles.item}
                     onClick={() => {
                       setVisible(false);
-                      if (x.title === "Log out") {
+                      if (x.title === "Logout") {
                         handleLogout();
                       }
                     }}
