@@ -35,8 +35,9 @@ const Panel = ({ setVisiblePreview, setVisibleSchedule, campModified, onUpdate }
         Updated <span>{campModified?.toDate().toLocaleDateString("en-US")}</span>
       </div>
       <div className={styles.btns}>
-        <button className={cn("button-stroke", styles.button)}>
-          Delete Camp
+      <button className={cn("button-stroke-red", styles.button)}>
+          <span>Delete</span>
+          <Icon name="trash" size="24" />
         </button>
         <button className={cn("button", styles.button)} onClick={onUpdate}>
           Update now

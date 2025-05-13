@@ -7,10 +7,10 @@ const Panel = () => {
   return (
     <div className={cn("panel", styles.panel)}>
       <div className={styles.info}>
-        <Icon name="check-all" size="24" />
+        
         
       </div>
-      <button className={cn("button", styles.button)}>Message</button>
+      
     </div>
   );
 };

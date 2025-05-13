@@ -8,7 +8,11 @@ const db = getFirestore(app);
 
 export const fetchUsers = async () => {
   const cachedUsers = Cookies.get("cachedUsers");
-  if (cachedUsers) {
+  const cachedUsersTimestamp = Cookies.get("cachedUsersTimestamp");
+  const now = Date.now();
+  const expiration = 1 * 60 * 1000; // 1 minute
+
+  if (cachedUsers && cachedUsersTimestamp && now - parseInt(cachedUsersTimestamp) < expiration) {
     return JSON.parse(cachedUsers);
   }
 
@@ -22,19 +26,27 @@ export const fetchUsers = async () => {
       id: idCounter++,
       nameFirst: data.nameFirst || "",
       nameLast: data.nameLast || "",
-      memberSince: data.memberSince?.toDate().toDateString() || "",
+      memberSince: data.memberSince
+        ? new Date(data.memberSince.toDate()).toLocaleDateString("en-US", {
+            year: "2-digit",
+            month: "2-digit",
+            day: "2-digit",
+          })
+        : "",
       avatar: data.avatar || "/images/content/Avatar-Default.png",
       email: data.email || "",
       userStatus: "Approved",
       userRole:
-        data.userRole === "1"
+        data.role === "1"
           ? "Admin"
-          : data.userRole === "2"
+          : data.role === "2"
           ? "Provider"
           : "General User",
+      role: ["1", "2", "3"].includes(data.role) ? data.role : "3",
     });
   });
 
-  Cookies.set("cachedUsers", JSON.stringify(userList), { expires: 1 / 24 });
+  Cookies.set("cachedUsers", JSON.stringify(userList), { expires: 1 / 1440 });
+  Cookies.set("cachedUsersTimestamp", now.toString(), { expires: 1 / 1440 });
   return userList;
 };
