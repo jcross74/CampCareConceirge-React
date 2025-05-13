@@ -1,0 +1,63 @@
+@import ../../../styles/helpers
+
+.description
+    & > .field
+        &:not(:last-child)
+            margin-bottom: 32px
+            +d
+                margin-bottom: 24px
+
+.editor
+    &:not(:last-child)
+        margin-bottom: 32px
+        +d
+            margin-bottom: 24px
+
+// New style for the Dropdown margin adjustments
+.dropdownMargin
+  margin-bottom: 32px
+  // Mobile breakpoint: adjust margin-bottom to 24px
+  +m
+    margin-bottom: 24px
+
+// Optionally, if you have breakpoints for extra-large desktops, you can add:
++d
+  // (if any extra adjustments are needed on desktop)
+
+.group
+    display: flex
+    flex-wrap: wrap
+    align-items: flex-end
+    margin: 0 -6px -12px
+    +m
+        display: block
+        margin: 0
+    .field
+        flex: 0 0 calc(50% - 12px)
+        width: calc(50% - 12px)
+        margin: 0 6px 12px
+        +m
+            width: 100%
+            margin: 12px 0 0
+
+.fieldset
+    display: flex
+    margin: 0 -6px
+    .field
+        flex: 0 0 calc(50% - 12px)
+        width: calc(50% - 12px)
+        margin: 0 6px
+    .label
+        margin-bottom: 12px
+        font-size: 12px
+        line-height: (16/12)
+        font-weight: 700
+        color: $n4
+
+.fieldset
+  // existing styles (if any)
+  margin-bottom: 32px
+  
+  // Mobile breakpoint using your +m indicator
+  +m
+    margin-bottom: 24px

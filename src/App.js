@@ -14,6 +14,7 @@ import FindCamps from "./screens/FindCamps";
 import Contact from "./screens/Contact";
 import CampsDashboard from "./screens/CampsDashboard";
 import NewCamp from "./screens/NewCamp";
+import EditCamp from "./screens/EditCamp";
 import Drafts from "./screens/PendingCamps";
 import Released from "./screens/Released";
 import Comments from "./screens/Comments";
@@ -97,6 +98,14 @@ function App() {
             element={
               <Page title="New Camp">
                 <NewCamp />
+              </Page>
+            }
+          />
+          <Route
+            path="/admin/camps/edit"
+            element={
+              <Page title="Edit Camp">
+                <EditCamp />
               </Page>
             }
           />

@@ -127,7 +127,7 @@ const Overview = ({ className }) => {
           ? pendingCount
           : "None"
         : "None",
-      icon: "shopping-bag",
+      icon: "activity",
       value: -37.8,
       background: "#ecf9fe",
      
@@ -158,12 +158,7 @@ const Overview = ({ className }) => {
                   <div className={styles.details}>
                     <div className={styles.category}>
                       {x.title}
-                      <Tooltip
-                        className={styles.tooltip}
-                        title="Small description"
-                        icon="info"
-                        place="right"
-                      />
+                      
                     </div>
                     <div className={styles.counter}>{x.counter}</div>
                   </div>

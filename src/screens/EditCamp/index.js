@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./NewCamp.module.sass";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import styles from "./EditCamp.module.sass";
 import TooltipGlodal from "../../components/TooltipGlodal";
 import Modal from "../../components/Modal";
 import Schedule from "../../components/Schedule";
@@ -11,11 +11,14 @@ import CategoryAndAttibutes from "./CategoryAndAttibutes";
 import Discussion from "./Discussion";
 import Preview from "./Preview";
 import Panel from "./Panel";
-import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
+import { getFirestore, collection, addDoc, Timestamp, doc, getDoc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { app } from "../../firebase";
 
-const NewCamp = () => {
+const EditCamp = () => {
+  const location = useLocation();
+  const campID = location.state?.campID;
+
   // Visibility states
   const [visiblePreview, setVisiblePreview] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
@@ -44,8 +47,61 @@ const NewCamp = () => {
   const [campStatus, setCampStatus] = useState("Pending");
   const [campCost, setCampCost] = useState(0); // Number value
   const [campFormat, setCampFormat] = useState("Select");
+  const [campModified, setCampModified] = useState(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCamp = async () => {
+      if (!campID) {
+        console.log("No docID received");
+        return;
+      }
+
+      console.log("Passed in campID:", campID);
+
+      const db = getFirestore(app);
+      const docRef = doc(db, "camps", campID);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log("Number of records returned: 1");
+        const data = docSnap.data();
+        setCampName(data.campName || "");
+        setCampProvider(data.campProvider || "Select");
+        setCampSeason(data.campSeason || "Select");
+        setCampStart(
+          data.campStart?.toDate
+            ? data.campStart.toDate().toISOString().split("T")[0]
+            : ""
+        );
+        setCampEnd(
+          data.campEnd?.toDate
+            ? data.campEnd.toDate().toISOString().split("T")[0]
+            : ""
+        );
+        setCampDescription(data.campDescription || "");
+        setCampTags(data.campTags || []);
+        setCampGenders(data.campGenders || "Select");
+        setCampAgeMax(data.campAgeMax || 0);
+        setCampAgeMin(data.campAgeMin || 0);
+        setCampVenue(data.campVenue || "");
+        setCampStreet(data.campStreet || "");
+        setCampCity(data.campCity || "");
+        setCampState(data.campState || "VA");
+        setCampZip(data.campZip || "");
+        setCampRegistrationURL(data.campRegistrationURL || "");
+        setCampStatus(data.campStatus || "Pending");
+        setCampCost(data.campCost || 0);
+        setCampFormat(data.campFormat || "Select");
+        setCampModified(data.campModified || null);
+      } else {
+        console.log("No matching documents.");
+      }
+    };
+
+    fetchCamp();
+  }, [campID]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -133,6 +189,41 @@ const NewCamp = () => {
     }
   };
 
+  const handleUpdate = async () => {
+    if (!campID) return;
+    try {
+      const db = getFirestore(app);
+      const docRef = doc(db, "camps", campID);
+      const updateFields = {
+        campName,
+        campProvider,
+        campSeason,
+        campStart: Timestamp.fromDate(new Date(campStart)),
+        campEnd: Timestamp.fromDate(new Date(campEnd)),
+        campDescription,
+        campTags,
+        campGenders,
+        campAgeMax: Number(campAgeMax),
+        campAgeMin: Number(campAgeMin),
+        campVenue,
+        campStreet,
+        campCity,
+        campState,
+        campZip,
+        campRegistrationURL,
+        campStatus,
+        campCost: Number(campCost),
+        campFormat,
+        campModified: Timestamp.now()
+      };
+      await updateDoc(docRef, updateFields);
+      console.log("Update recorded");
+      navigate("/admin/camps/dashboard");
+    } catch (error) {
+      console.error("Error updating camp:", error);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className={styles.row}>
@@ -152,6 +243,8 @@ const NewCamp = () => {
             setCampEnd={setCampEnd}
             campDescription={campDescription}
             setCampDescription={setCampDescription}
+            campStatus={campStatus}
+            setCampStatus={setCampStatus}
           />
           <Discussion
             className={styles.card}
@@ -196,6 +289,8 @@ const NewCamp = () => {
       <Panel
         setVisiblePreview={setVisiblePreview}
         setVisibleSchedule={setVisibleModal}
+        campModified={campModified}
+        onUpdate={handleUpdate}
       />
       <TooltipGlodal />
       <Modal visible={visibleModal} onClose={() => setVisibleModal(false)}>
@@ -213,4 +308,4 @@ const NewCamp = () => {
   );
 };
 
-export default NewCamp;
+export default EditCamp;

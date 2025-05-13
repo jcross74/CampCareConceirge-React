@@ -23,14 +23,16 @@ export const fetchMarketData = async () => {
 
     market.push({
       id: index,
+      docID: doc.id,
       campName: data.campName || "",
       campHost: data.campProvider || "",
       campCost: Number(data.campCost) || 0,
-      status: data.campStatus === "Approved",
+      status: data.campStatus === "Approved" ? true : false,
       campCity: data.campCity || "",
       campState: data.campState || "",
       campVenue: data.campVenue || "",
       category: data.campTags?.[0] || "",
+      campModified: data.campModified?.toDate().toLocaleDateString() || "",
       image,
       image2x,
     });
@@ -53,10 +55,11 @@ export const fetchReleasedData = async () => {
 
     released.push({
       id: index,
+      docID: doc.id,
       campName: data.campName || "",
       campHost: data.campProvider || "",
       campCost: Number(data.campCost) || 0,
-      status: true,
+      status: data.campStatus === "Approved" ? true : false,
       campCity: data.campCity || "",
       campState: data.campState || "",
       campVenue: data.campVenue || "",
@@ -73,6 +76,7 @@ export const fetchReleasedData = async () => {
       campAgeMin: data.campAgeMin || "",
       campAgeMax: data.campAgeMax || "",
       date: data.campModified?.toDate().toLocaleDateString() || "",
+      campModified: data.campModified?.toDate().toLocaleDateString() || "",
       image,
       image2x,
     });

@@ -1,26 +1,26 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Row.module.sass";
 import cn from "classnames";
 import Checkbox from "../../../../../components/Checkbox/index.js";
 import Balance from "../../../../../components/Balance/index.js";
-import ModalProduct from "../../../../../components/ModalProduct/index.js";
 import Control from "../../Control/index.js";
 
 import { numberWithCommas } from "../../../../../utils.js";
 
 const Row = ({ item, value, onChange, up }) => {
   const [visibleActions, setVisibleActions] = useState(false);
-  const [visibleModalProduct, setVisibleModalProduct] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
-      <div className={styles.row} onMouseLeave={() => setVisibleActions(false)}>
+      <div
+        className={styles.row}
+        onMouseLeave={() => setVisibleActions(false)}
+        onClick={() => navigate("/admin/camps/edit", { state: { campID: item.docID } })}
+      >
         <div className={styles.col}>
-          <Checkbox
-            className={styles.checkbox}
-            value={value}
-            onChange={onChange}
-          />
+          
         </div>
         <div className={styles.col}>
           <div
@@ -31,7 +31,7 @@ const Row = ({ item, value, onChange, up }) => {
               <img
                 srcSet={`${item.image2x} 2x`}
                 src={item.image}
-                alt="Product"
+                alt="Camp"
               />
             </div>
             <div className={styles.details}>
@@ -79,10 +79,7 @@ const Row = ({ item, value, onChange, up }) => {
 
         
       </div>
-      <ModalProduct
-        visible={visibleModalProduct}
-        onClose={() => setVisibleModalProduct(false)}
-      />
+      
     </>
   );
 };
