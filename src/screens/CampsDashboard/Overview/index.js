@@ -29,7 +29,7 @@ const Overview = ({ className }) => {
   // Fetch total camps count from Firestore and cache for 24 hours.
   useEffect(() => {
     let isMounted = true;
-    const expiration = 2 * 60 * 60 * 1000; // 2 hours in ms
+    const expiration = 2 * 60 * 1000; // 2 minutes in ms
     const now = new Date().getTime();
 
     const cachedCount = Cookies.get("campsCount");
@@ -50,8 +50,8 @@ const Overview = ({ className }) => {
           const campsRef = collection(db, "camps");
           const snapshot = await getDocs(campsRef);
           const count = snapshot.size;
-          Cookies.set("campsCount", count.toString(), { expires: 1 });
-          Cookies.set("campsCountTimestamp", now.toString(), { expires: 1 });
+          Cookies.set("campsCount", count.toString(), { expires: 1 / 720 }); // 2 minutes = 1/720 days
+          Cookies.set("campsCountTimestamp", now.toString(), { expires: 1 / 720 });
           if (isMounted) {
             setCampsCount(count);
           }
@@ -66,10 +66,10 @@ const Overview = ({ className }) => {
     };
   }, []);
 
-  // Fetch Pending Camps count from Firestore and cache for 1 hours.
+  // Fetch Pending Camps count from Firestore and cache for 2 minutes.
   useEffect(() => {
     let isMounted = true;
-    const expiration = 1 * 60 * 60 * 1000; // 1 hours in ms
+    const expiration = 2 * 60 * 1000; // 2 minutes in ms
     const now = new Date().getTime();
 
     const cachedPending = Cookies.get("pendingCamps");
@@ -91,8 +91,8 @@ const Overview = ({ className }) => {
           const pendingQuery = query(campsRef, where("campStatus", "==", "Pending"));
           const snapshot = await getDocs(pendingQuery);
           const count = snapshot.size;
-          Cookies.set("pendingCamps", count.toString(), { expires: 1/24 }); // Expires in 1 hours (1/24 days)
-          Cookies.set("pendingCampsTimestamp", now.toString(), { expires: 1/24 });
+          Cookies.set("pendingCamps", count.toString(), { expires: 1 / 720 }); // 2 minutes = 1/720 days
+          Cookies.set("pendingCampsTimestamp", now.toString(), { expires: 1 / 720 });
           if (isMounted) {
             setPendingCount(count);
           }

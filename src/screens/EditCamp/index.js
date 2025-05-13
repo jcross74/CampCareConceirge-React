@@ -103,92 +103,6 @@ const EditCamp = () => {
     fetchCamp();
   }, [campID]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Basic validations:
-    if (!campName) {
-      alert("Please enter a camp name.");
-      return;
-    }
-    if (!campStart || !campEnd) {
-      alert("Please enter both a start and end date.");
-      return;
-    }
-    const startDateObj = new Date(campStart);
-    const endDateObj = new Date(campEnd);
-    if (isNaN(startDateObj.getTime()) || isNaN(endDateObj.getTime())) {
-      alert("Please enter valid start and end dates.");
-      return;
-    }
-
-    try {
-      const db = getFirestore(app);
-      const storage = getStorage(app);
-      // Reference the "camps" collection
-      const campsRef = collection(db, "camps");
-
-
-      // Convert start and end dates to Firestore Timestamps
-      const startTimestamp = Timestamp.fromDate(startDateObj);
-      const endTimestamp = Timestamp.fromDate(endDateObj);
-      const modifiedTimestamp = Timestamp.now();
-
-      // Write all the fields to Firestore with the expected field names.
-      await addDoc(campsRef, {
-        campName,                             // String
-        campProvider,                         // String
-        campSeason,                           // String
-        campStart: startTimestamp,            // Timestamp
-        campEnd: endTimestamp,                // Timestamp
-        campDescription,                      // String
-        campTags,                             // Array of strings
-        campGenders,                          // String
-        campAgeMax: Number(campAgeMax),         // Number
-        campAgeMin: Number(campAgeMin),         // Number
-        campVenue,                            // String
-        campStreet,                           // String
-        campCity,                             // String
-        campState,                            // String
-        campZip,                              // String
-        campRegistrationURL,                  // String
-        campStatus,                           // String
-        campCost: Number(campCost),            // Number
-        campFormat,                           // String
-        campModified: modifiedTimestamp       // Timestamp
-      });
-
-      alert("Camp added successfully!");
-
-      // Reset form fields to their initial values.
-      setCampName("");
-      setCampProvider("Select");
-      setCampSeason("Select");
-      setCampStart("");
-      setCampEnd("");
-      setCampDescription("");
-      setCampTags([]);
-      setCampGenders("Select");
-      setCampAgeMax(0);
-      setCampAgeMin(0);
-      setCampVenue("");
-      setCampStreet("");
-      setCampCity("");
-      setCampState("VA");
-      setCampZip("");
-      setCampRegistrationURL("");
-      setCampStatus("Pending");
-      setCampCost(0);
-      setCampFormat("Select");
-
-      // Stay on the same page (do not redirect)
-      // Optionally, you could focus back to the form or display a success message.
-    } catch (error) {
-      console.error("Error adding camp:", error);
-      alert("Error adding camp. Please try again.");
-    }
-  };
-
   const handleUpdate = async () => {
     if (!campID) return;
     try {
@@ -225,7 +139,7 @@ const EditCamp = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <div className={styles.row}>
         <div className={styles.col}>
           {/* Child components with controlled inputs */}
@@ -301,10 +215,7 @@ const EditCamp = () => {
           setStartTime={setStartTime}
         />
       </Modal>
-      <button type="submit" className={styles.submitButton}>
-        
-      </button>
-    </form>
+    </div>
   );
 };
 
