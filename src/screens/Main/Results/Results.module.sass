@@ -18,7 +18,7 @@
   padding: 60px 40px
 
 .sidebar
-  width: 280px
+  width: 420px
   flex-shrink: 0
 
 .card
@@ -50,13 +50,14 @@
 
 .campGrid
   display: grid
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+  grid-template-columns: repeat(2, 1fr)
   gap: 40px
   flex: 1
   min-width: 0
 
 .campCard
   background: #fff
+  min-width: 350px
   border-radius: 12px
   overflow: hidden
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05)
@@ -104,7 +105,8 @@
 
 .meta
   display: flex
-  justify-content: space-between
+  flex-direction: column
+  gap: 4px
   font-size: 13px
   color: #6b7280
   margin-top: 12px
@@ -119,6 +121,9 @@
 
   .campGrid
     grid-template-columns: 1fr
+
+  .container
+    margin: 0
 
 .heading 
     font-size: 1.3em

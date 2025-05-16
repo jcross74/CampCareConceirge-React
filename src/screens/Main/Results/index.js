@@ -217,6 +217,16 @@ const Results = () => {
                     })()}
                     <div className={styles.meta}>
                       <span>{item.campCity}, VA {item.zip}</span>
+                      <span>
+                        {new Date(item.campStart.seconds * 1000).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric'
+                        })} – {new Date(item.campEnd.seconds * 1000).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </span>
                       <span>{item.ageRange}</span>
                     </div>
                   </div>
