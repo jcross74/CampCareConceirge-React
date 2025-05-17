@@ -68,3 +68,26 @@
                 fill: $n1
     &:not(:last-child)
         margin-right: 8px
+
+.pagination
+    display: flex
+    justify-content: center
+    margin-top: 16px
+
+    button
+        margin: 0 8px
+        padding: 16px 24px
+        +caption1
+        background: none
+        border: 1px solid $n3
+        border-radius: 4px
+        cursor: pointer
+        &:disabled
+            opacity: 0.5
+            cursor: default
+
+    span
+        font-size: 1em
+        color: $n4
+        margin: 0 8px
+        align-content: center

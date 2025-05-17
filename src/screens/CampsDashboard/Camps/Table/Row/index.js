@@ -26,7 +26,7 @@ const Row = ({ item, value, onChange, up }) => {
                             <img
                                 srcSet={`${item.image2x} 2x`}
                                 src={item.image}
-                                alt="Product"
+                                alt="Camp"
                             />
                         </div>
                         <div className={styles.details}>
