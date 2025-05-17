@@ -26,6 +26,9 @@ import { db } from "../../firebase";
 import { products } from "../../mocks/products";
 import { followers } from "../../mocks/followers";
 
+// Cache user role to avoid repeated Firestore lookups
+let cachedUserRole = null;
+
 const intervals = ["Most recent", "Most new", "Most popular"];
 
 const getCookie = (name) => {
@@ -46,6 +49,13 @@ const Main = () => {
       console.log("Cookie value for userUID:", userUID);
       if (!userUID) return;
 
+      // If we've already fetched the role, use the cached value
+      if (cachedUserRole !== null) {
+        document.cookie = `role=${cachedUserRole}; path=/;`;
+        console.log("Using cached role:", cachedUserRole);
+        return;
+      }
+
       try {
         const usersRef = collection(db, "users");
         const q = query(usersRef, where("authID", "==", userUID));
@@ -53,11 +63,13 @@ const Main = () => {
         console.log("Number of user records returned:", snapshot.size);
 
         if (snapshot.empty) {
+          cachedUserRole = 0;
           document.cookie = "role=0; path=/;";
           console.log("Cookie set: role=0");
         } else {
           snapshot.forEach((doc) => {
             const data = doc.data();
+            cachedUserRole = data.role;
             document.cookie = `role=${data.role}; path=/;`;
             console.log("Cookie set: role=" + data.role);
           });
