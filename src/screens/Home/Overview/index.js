@@ -9,7 +9,7 @@ import Users from "../../../components/Users";
 import Chart from "./Chart";
 
 // Firestore imports
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getCountFromServer } from "firebase/firestore";
 import { app } from "../../../firebase"; // Adjust this path if necessary
 
 const db = getFirestore(app);
@@ -31,10 +31,12 @@ const Overview = ({ className }) => {
     if (userCache) {
       setUserCount(Number(userCache));
     } else {
-      getDocs(collection(db, "users"))
-        .then((querySnapshot) => {
-          Cookies.set("userCount", querySnapshot.size, { expires: 1/12 }); // 2 hours
-          setUserCount(querySnapshot.size);
+      const usersCollection = collection(db, "users");
+      getCountFromServer(usersCollection)
+        .then((snapshot) => {
+          const count = snapshot.data().count;
+          Cookies.set("userCount", count, { expires: 1/12 }); // 2 hours
+          setUserCount(count);
         })
         .catch((error) => {
           console.error("Error fetching user count:", error);
@@ -44,10 +46,12 @@ const Overview = ({ className }) => {
     if (campCache) {
       setCampCount(Number(campCache));
     } else {
-      getDocs(collection(db, "camps"))
-        .then((querySnapshot) => {
-          Cookies.set("campCount", querySnapshot.size, { expires: 1/12 }); // 2 hours
-          setCampCount(querySnapshot.size);
+      const campsCollection = collection(db, "camps");
+      getCountFromServer(campsCollection)
+        .then((snapshot) => {
+          const count = snapshot.data().count;
+          Cookies.set("campCount", count, { expires: 1/12 }); // 2 hours
+          setCampCount(count);
         })
         .catch((error) => {
           console.error("Error fetching camp count:", error);

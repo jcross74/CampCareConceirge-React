@@ -6,7 +6,7 @@ import Loader from "../../../components/Loader";
 import Row from "./Row";
 
 // data
-import { fetchReleasedData } from "../../../mocks/market";
+import { fetchReleasedData } from "../../../mocks/camp";
 
 const Market = () => {
   const [chooseAll, setСhooseAll] = useState(false);

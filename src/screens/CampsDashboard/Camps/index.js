@@ -7,66 +7,27 @@ import cn from "classnames";
 import Card from "../../../components/Card";
 import Form from "../../../components/Form";
 import Dropdown from "../../../components/Dropdown";
-import Market from "./Market";
-import Table from "./Table";
-
-// data
-import { traffic } from "../../../mocks/traffic";
-import { viewers } from "../../../mocks/viewers";
-import { fetchMarketData } from "../../../mocks/market";
-
-const indicatorsTraffic = [
-  {
-    title: "Market",
-    color: "#FFBC99",
-  },
-  {
-    title: "Social media",
-    color: "#CABDFF",
-  },
-  {
-    title: "Direct",
-    color: "#B5E4CA",
-  },
-  {
-    title: "UI8",
-    color: "#B1E5FC",
-  },
-  {
-    title: "Others",
-    color: "#FFD88D",
-  },
-];
-
-const indicatorsViewers = [
-  {
-    title: "Followers",
-    color: "#B5E4CA",
-  },
-  {
-    title: "Others",
-    color: "#CABDFF",
-  },
-];
+import Camp from "./Camp";
+import { fetchCampData } from "../../../mocks/camp";
 
 const Camps = () => {
-  const navigation = ["Market", "Traffic sources", "Viewers"];
+  const navigation = ["Camp"];
 
   const [activeTab, setActiveTab] = useState(navigation[0]);
   const [search, setSearch] = useState("");
-  const [marketItems, setMarketItems] = useState([]);
+  const [campItems, setCampItems] = useState([]);
 
   useEffect(() => {
-    const loadMarket = async () => {
-      const cachedData = Cookies.get("marketData");
+    const loadCamp = async () => {
+      const cachedData = Cookies.get("campData");
       if (cachedData) {
-        setMarketItems(JSON.parse(cachedData));
+        setCampItems(JSON.parse(cachedData));
         return;
       }
-      const data = await fetchMarketData();
-      setMarketItems(data);
+      const data = await fetchCampData();
+      setCampItems(data);
     };
-    loadMarket();
+    loadCamp();
   }, []);
 
   const handleSubmit = (e) => {
@@ -96,17 +57,7 @@ const Camps = () => {
     >
       <div className={styles.products}>
         <div className={styles.wrapper}>
-          {activeTab === navigation[0] && <Market items={marketItems} />}
-          {activeTab === navigation[1] && (
-            <Table
-              title="Traffic source"
-              items={traffic}
-              legend={indicatorsTraffic}
-            />
-          )}
-          {activeTab === navigation[2] && (
-            <Table title="Viewers" items={viewers} legend={indicatorsViewers} />
-          )}
+          {activeTab === navigation[0] && <Camp items={campItems} />}
         </div>
       </div>
     </Card>

@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 import Cookies from "js-cookie";
-import { fetchMarketData } from "../../../mocks/market";
+import { fetchCampData } from "../../../mocks/camp";
 import styles from "./Panel.module.sass";
 import Icon from "../../../components/Icon";
 import Actions from "../../../components/Actions";
@@ -32,8 +32,8 @@ const Panel = ({ setVisiblePreview, setVisibleSchedule, campModified, onUpdate }
 
   const handleClick = async () => {
     await onUpdate();
-    const updatedMarketData = await fetchMarketData();
-    Cookies.set("marketData", JSON.stringify(updatedMarketData), { expires: 1 / 1440 });
+    const updatedCampData = await fetchCampData();
+    Cookies.set("campData", JSON.stringify(updatedCampData), { expires: 1 / 1440 });
     window.location.reload();
   };
 

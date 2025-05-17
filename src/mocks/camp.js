@@ -1,10 +1,10 @@
-import { getDocs, collection, query, where, orderBy } from "firebase/firestore";
+import { getDocs, collection, query, where, orderBy, getCountFromServer } from "firebase/firestore";
 import { db } from "../firebase"; 
 import { progress } from "../utils";
 import Cookies from "js-cookie";
 
-export const fetchMarketData = async () => {
-  const cached = Cookies.get("marketData");
+export const fetchCampData = async () => {
+  const cached = Cookies.get("campData");
   if (cached) {
     try {
       return JSON.parse(cached);
@@ -14,14 +14,14 @@ export const fetchMarketData = async () => {
   }
 
   const snapshot = await getDocs(query(collection(db, "camps"), orderBy("campModified", "desc")));
-  const market = [];
+  const camp = [];
 
   snapshot.forEach((doc, index) => {
     const data = doc.data();
     const image = data.campImage?.[0] || "/images/content/Camp_Image.png";
     const image2x = data.campImage?.[0] || "/images/content/Camp_Image@2x.png";
 
-    market.push({
+    camp.push({
       id: index,
       docID: doc.id,
       campName: data.campName || "",
@@ -38,8 +38,8 @@ export const fetchMarketData = async () => {
     });
   });
 
-  Cookies.set("marketData", JSON.stringify(market), { expires: 1 / 1440 }); // 1 minute
-  return market;
+  Cookies.set("campData", JSON.stringify(camp), { expires: 1 / 1440 }); // 1 minute
+  return camp;
 };
 
 export const fetchReleasedData = async () => {
@@ -87,3 +87,24 @@ export const fetchReleasedData = async () => {
 
 
 export const released = [];
+
+/**
+ * Get total number of camps without downloading all documents
+ */
+export const fetchCampCount = async () => {
+  const coll = collection(db, "camps");
+  const snapshot = await getCountFromServer(coll);
+  return snapshot.data().count;
+};
+
+/**
+ * Get number of approved camps without downloading all documents
+ */
+export const fetchApprovedCampCount = async () => {
+  const approvedQuery = query(
+    collection(db, "camps"),
+    where("campStatus", "==", "Approved")
+  );
+  const snapshot = await getCountFromServer(approvedQuery);
+  return snapshot.data().count;
+};

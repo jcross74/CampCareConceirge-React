@@ -4,7 +4,7 @@ import Checkbox from "../../../../components/Checkbox";
 import Icon from "../../../../components/Icon";
 import Row from "./Row";
 
-const Market = ({ items }) => {
+const Camp = ({ items }) => {
   const [chooseAll, setСhooseAll] = useState(false);
 
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -50,4 +50,4 @@ const Market = ({ items }) => {
   );
 };
 
-export default Market;
+export default Camp;
