@@ -83,7 +83,18 @@ const Main = () => {
       const unique = [...new Set(items.filter(Boolean))].sort((a, b) =>
         a.localeCompare(b)
       );
-      setOptions(unique.map((val) => ({ value: val })));
+      setOptions(
+        unique.map((val) => {
+          const raw = String(val);
+          // Convert to title case: capitalize each word
+          const cleanText = raw.replace(/^[\[\]"']+|[\[\]"']+$/g, "");
+          const titleCased = cleanText
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+          return { value: titleCased };
+        })
+      );
     };
     loadOptions();
   }, []);
