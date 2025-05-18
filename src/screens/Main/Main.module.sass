@@ -28,9 +28,12 @@
    
 
 .control
-    display: block
+    display: flex
+    justify-content: space-between
     align-items: center
     margin-bottom: 32px
+    position: relative
+    gap: 8px
     +m
         flex-wrap: wrap
 
@@ -122,3 +125,70 @@
   +m
     h1
       font-size: 2.4em
+
+
+// Global dropdown styling for HeroUI Autocomplete
+:global([role="listbox"])
+    background: #fff
+    border: 1px solid $n3
+    border-radius: 8px
+    position: absolute
+    top: calc(100% + 4px)
+    width: 100%
+    max-height: 300px
+    overflow-y: auto
+    z-index: 1000
+
+:global([role="option"])
+    padding: 24px 24px
+    height: 60px
+    cursor: pointer
+    +base2
+
+:global([role="option"][aria-selected="true"]),
+:global([role="option"]:hover)
+    background: $n2
+
+
+// Ensure the Autocomplete input spans full width and style its placeholder
+:global(input[data-slot="input"]) 
+    font-size: 1em
+    width: 100%
+    &::placeholder
+        color: $n4
+
+
+
+
+// Hide any SVG icons inside the Autocomplete dropdown list
+:global([role="listbox"] svg)
+    display: none !important
+
+// Let the Autocomplete container flex and not force full width
+.control :global(.group.inline-flex.flex-column.w-full[data-open="true"])
+    flex: 1 1 auto !important
+    width: auto !important
+    min-width: 0 !important
+
+.searchButton
+    position: absolute
+    right: 0
+    top: 50%
+    transform: translateY(-50%)
+    z-index: 10
+    background: #DC2626
+    padding: 16px 24px
+    border-radius: 8px
+    color: white
+    font-size: 1em
+
+// Ensure the Autocomplete group container always spans full width
+:global(.group.inline-flex.flex-column.w-full)
+    width: 100% !important
+
+
+// Hide the Autocomplete toggle button wrapper
+:global(.relative.flex.h-full.items-center.-mr-2)
+    display: none !important
+
+

@@ -78,30 +78,36 @@ const Main = () => {
       const snapshot = await getDocs(collection(db, "camps"));
       const items = snapshot.docs.flatMap((doc) => {
         const data = doc.data();
-        return [data.campName, data.campCity, ...(data.campTags || [])];
+        return [data.campCity ? `${data.campCity}, VA` : data.campCity, ...(data.campTags || [])];
       });
-      const unique = [...new Set(items.filter(Boolean))];
+      const unique = [...new Set(items.filter(Boolean))].sort((a, b) =>
+        a.localeCompare(b)
+      );
       setOptions(unique.map((val) => ({ value: val })));
     };
     loadOptions();
   }, []);
 
   const handleSubmit = async (searchValue) => {
+    // Normalize the search term by removing any “, VA” suffix
+    const term = searchValue.endsWith(", VA")
+      ? searchValue.replace(/, VA$/, "")
+      : searchValue;
     try {
       const campsRef = collection(db, "camps");
       const q = query(
         campsRef,
         or(
-          where("campTags", "array-contains", searchValue),
-          where("campName", ">=", searchValue),
-          where("campName", "<=", searchValue + "\uf8ff"),
-          where("campCity", ">=", searchValue),
-          where("campCity", "<=", searchValue + "\uf8ff")
+          where("campTags", "array-contains", term),
+          where("campName", ">=", term),
+          where("campName", "<=", term + "\uf8ff"),
+          where("campCity", ">=", term),
+          where("campCity", "<=", term + "\uf8ff")
         )
       );
       const snapshot = await getDocs(q);
       const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      navigate("/results", { state: { results, searchTerm: searchValue } });
+      navigate("/results", { state: { results, searchTerm: term } });
     } catch (error) {
       console.error("Search failed:", error);
     }
@@ -120,6 +126,8 @@ const Main = () => {
         <Card className={styles.card}>
           <div className={styles.control}>
             <Autocomplete
+              size="lg"
+              label="Search Camps"
               placeholder="Search by camp name, activity or location"
               items={options}
               allowsCustomValue
@@ -127,7 +135,11 @@ const Main = () => {
               onInputChange={(value) => setSearch(value)}
               onSelectionChange={(item) => {
                 if (!item) return;
-                setSearch(typeof item === "string" ? item : item.value);
+                let val = typeof item === "string" ? item : item.value;
+                if (val.endsWith(", VA")) {
+                  val = val.replace(/, VA$/, "");
+                }
+                setSearch(val);
               }}
               name="search"
               onKeyDown={(e) => {
@@ -143,6 +155,12 @@ const Main = () => {
                 </AutocompleteItem>
               )}
             </Autocomplete>
+            <button
+              className={styles.searchButton}
+              onClick={() => handleSubmit(search)}
+            >
+              Search
+            </button>
             <div className={styles.dropdownBox}></div>
           </div>
 
