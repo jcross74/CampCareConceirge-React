@@ -18,7 +18,7 @@ const Camp = ({ items }) => {
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 50;
+  const itemsPerPage = 20;
   const pageCount = Math.ceil(items.length / itemsPerPage);
   const pagedItems = items.slice(
     (currentPage - 1) * itemsPerPage,

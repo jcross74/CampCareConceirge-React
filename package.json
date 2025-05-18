@@ -9,6 +9,7 @@
     "@headlessui/react": "^2.2.2",
     "@heroicons/react": "^2.2.0",
     "@heroui/accordion": "^2.2.16",
+    "@heroui/autocomplete": "^2.3.20",
     "@heroui/react": "^2.7.8",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",

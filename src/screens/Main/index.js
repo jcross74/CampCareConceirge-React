@@ -1,4 +1,4 @@
-// Main Front Facing page of the site (User Homepage)
+// src/screens/Main/index.js
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,22 +13,20 @@ import Product from "../../components/Product";
 import Follower from "./Follower";
 import MainNavigation from "../../components/MainNavigation";
 import Footer from "../../components/Footer";
-import Search from "../../components/Header/Search";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import Provide from "./Provide";
 import Benefits from "./Benefits";
 import Partner from "./Partner";
-import Form from "../../components/Form";
 
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, or } from "firebase/firestore";
 import { db } from "../../firebase";
 
-// data
+// mock data
 import { products } from "../../mocks/products";
 import { followers } from "../../mocks/followers";
 
-// Cache user role to avoid repeated Firestore lookups
+// cache for user role
 let cachedUserRole = null;
-
 const intervals = ["Most recent", "Most new", "Most popular"];
 
 const getCookie = (name) => {
@@ -41,78 +39,69 @@ const Main = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [sorting, setSorting] = useState(intervals[0]);
   const [search, setSearch] = useState("");
+  const [options, setOptions] = useState([]);
   const navigate = useNavigate();
 
+  // Check & cache user role
   useEffect(() => {
     const checkUserRole = async () => {
       const userUID = getCookie("userUID");
-      console.log("Cookie value for userUID:", userUID);
       if (!userUID) return;
-
-      // If we've already fetched the role, use the cached value
       if (cachedUserRole !== null) {
         document.cookie = `role=${cachedUserRole}; path=/;`;
-        console.log("Using cached role:", cachedUserRole);
         return;
       }
-
       try {
         const usersRef = collection(db, "users");
         const q = query(usersRef, where("authID", "==", userUID));
         const snapshot = await getDocs(q);
-        console.log("Number of user records returned:", snapshot.size);
-
         if (snapshot.empty) {
           cachedUserRole = 0;
           document.cookie = "role=0; path=/;";
-          console.log("Cookie set: role=0");
         } else {
           snapshot.forEach((doc) => {
             const data = doc.data();
             cachedUserRole = data.role;
             document.cookie = `role=${data.role}; path=/;`;
-            console.log("Cookie set: role=" + data.role);
           });
         }
-      } catch (error) {
-        console.error("Error checking user role:", error);
+      } catch (err) {
+        console.error("Error checking role:", err);
       }
     };
-
     checkUserRole();
   }, []);
 
+  // Load autocomplete options from Firestore
+  useEffect(() => {
+    const loadOptions = async () => {
+      const snapshot = await getDocs(collection(db, "camps"));
+      const items = snapshot.docs.flatMap((doc) => {
+        const data = doc.data();
+        return [data.campName, data.campCity, ...(data.campTags || [])];
+      });
+      const unique = [...new Set(items.filter(Boolean))];
+      setOptions(unique.map((val) => ({ value: val })));
+    };
+    loadOptions();
+  }, []);
+
   const handleSubmit = async (searchValue) => {
-    console.log("Form submitted with value:", searchValue);
     try {
       const campsRef = collection(db, "camps");
-      const snapshot = await getDocs(campsRef);
-      const results = [];
-
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const city = (data.campCity || "").toLowerCase();
-        const description = (data.campDescription || "").toLowerCase();
-        const name = (data.campName || "").toLowerCase();
-        const venue = (data.campVenue || "").toLowerCase();
-        const tag = (data.campTag || "").toLowerCase();
-
-        const search = searchValue.toLowerCase();
-        if (
-          city.includes(search) ||
-          description.includes(search) ||
-          name.includes(search) ||
-          venue.includes(search) ||
-          tag.includes(search)
-        ) {
-          const fullData = { id: doc.id, ...doc.data() };
-          console.log("Matched record:", fullData);
-          results.push(fullData);
-        }
-      });
-
-      console.log(`Search term: "${searchValue}", Matches: ${results.length}`);
-      navigate("/results", { state: { results } });
+      const q = query(
+        campsRef,
+        or(
+          where("campTags", "array-contains", searchValue),
+          where("campName", ">=", searchValue),
+          where("campName", "<=", searchValue + "\uf8ff"),
+          where("campCity", ">=", searchValue),
+          where("campCity", "<=", searchValue + "\uf8ff")
+        )
+      );
+      const snapshot = await getDocs(q);
+      const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      navigate("/results", { state: { results, searchTerm: searchValue } });
     } catch (error) {
       console.error("Search failed:", error);
     }
@@ -127,52 +116,67 @@ const Main = () => {
             <h1>Discover North Virginia’s Best Camps & Activities for Kids</h1>
           </div>
         </div>
+
         <Card className={styles.card}>
           <div className={styles.control}>
-            <div className={styles.nav}>
-              <Form
-                className="formfull"
-                value={search}
-                setValue={setSearch}
-                onSubmit={() => handleSubmit(search)}
-                placeholder="Search by camp name, activity or location"
-                type="text"
-                name="search"
-                icon="search"
-              />
-            </div>
+            <Autocomplete
+              placeholder="Search by camp name, activity or location"
+              items={options}
+              allowsCustomValue
+              inputValue={search}
+              onInputChange={(value) => setSearch(value)}
+              onSelectionChange={(item) => {
+                if (!item) return;
+                setSearch(typeof item === "string" ? item : item.value);
+              }}
+              name="search"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSubmit(search);
+                }
+              }}
+            >
+              {(option) => (
+                <AutocompleteItem key={option.value}>
+                  {option.value}
+                </AutocompleteItem>
+              )}
+            </Autocomplete>
             <div className={styles.dropdownBox}></div>
           </div>
+
           <div className={styles.wrap}>
             {activeIndex === 0 && (
-              <>
-                <div className={styles.products}>
-                  {products.map((x, index) => (
-                    <Product
-                      className={styles.product}
-                      item={x}
-                      key={index}
-                      withoutСheckbox
-                    />
-                  ))}
-                </div>
-              </>
+              <div className={styles.products}>
+                {products.map((x, i) => (
+                  <Product
+                    className={styles.product}
+                    item={x}
+                    key={i}
+                    withoutСheckbox
+                  />
+                ))}
+              </div>
             )}
             {activeIndex === 1 && (
               <>
                 <div className={styles.followers}>
-                  {followers.map((x, index) => (
+                  {followers.map((x, i) => (
                     <Follower
                       className={styles.follower}
                       item={x}
-                      key={index}
+                      key={i}
                       followers
                     />
                   ))}
                 </div>
                 <div className={styles.foot}>
                   <button
-                    className={cn("button-stroke button-small", styles.button)}
+                    className={cn(
+                      "button-stroke button-small",
+                      styles.button
+                    )}
                   >
                     Load more
                   </button>
@@ -182,17 +186,20 @@ const Main = () => {
             {activeIndex === 2 && (
               <>
                 <div className={styles.followers}>
-                  {followers.map((x, index) => (
+                  {followers.map((x, i) => (
                     <Follower
                       className={styles.follower}
                       item={x}
-                      key={index}
+                      key={i}
                     />
                   ))}
                 </div>
                 <div className={styles.foot}>
                   <button
-                    className={cn("button-stroke button-small", styles.button)}
+                    className={cn(
+                      "button-stroke button-small",
+                      styles.button
+                    )}
                   >
                     Load more
                   </button>
@@ -201,6 +208,7 @@ const Main = () => {
             )}
           </div>
         </Card>
+
         <Provide />
         <Benefits />
         <Partner />
