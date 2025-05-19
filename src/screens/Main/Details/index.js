@@ -4,18 +4,23 @@ import MainNavigationDark from "../../../components/MainNavigationDark";
 import Footer from "../../../components/Footer";
 import styles from "./Details.module.sass";
 import Card from "../../../components/Card";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TextInput from '../../../components/TextInput';
 import Dropdown from '../../../components/Dropdown';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 
 const CampDetails = () => {
   const { state } = useLocation();
   const camp = state || {};
+  const navigate = useNavigate();
 
   const [venuePhotos, setVenuePhotos] = useState([]);
+
+  const functions = getFunctions();
+  const cacheVenuePhoto = httpsCallable(functions, "cacheVenuePhoto");
 
   useEffect(() => {
     if (!camp.id) return;
@@ -29,9 +34,6 @@ const CampDetails = () => {
         return;
       }
       // Otherwise, fetch from Google Places
-      const service = new window.google.maps.places.PlacesService(
-        document.createElement('div')
-      );
       const fullAddress = [
         camp.campVenue,
         camp.campStreet,
@@ -41,17 +43,29 @@ const CampDetails = () => {
         .filter(Boolean)
         .join(', ');
       const request = { query: fullAddress, fields: ['photos'] };
-      service.findPlaceFromQuery(request, async (results, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK && results[0]?.photos) {
-          const urls = results[0].photos.map(photo =>
+      try {
+        // Use the new Place API instead of PlacesService
+        const placeClient = new window.google.maps.places.Place();
+        const { photos } = await placeClient.find(request);
+        if (photos) {
+          const rawUrls = photos.map(photo =>
             photo.getUrl({ maxWidth: 800, maxHeight: 600 })
           );
-          // Display first two photos immediately
-          setVenuePhotos(urls.slice(0, 2));
-          // Cache full list of URLs in Firestore
-          await updateDoc(docRef, { venuePhotos: urls });
+          // Use Cloud Function to cache photos in Firebase Storage and get stable URLs
+          const storageUrls = await Promise.all(
+            rawUrls.map((u, i) =>
+              cacheVenuePhoto({ photoServiceUrl: u, campId: camp.id, index: i })
+                .then(r => r.data.url)
+            )
+          );
+          // Display first two photos
+          setVenuePhotos(storageUrls.slice(0, 2));
+          // Cache full list of storage URLs in Firestore
+          await updateDoc(docRef, { venuePhotos: storageUrls });
         }
-      });
+      } catch (err) {
+        console.warn('Place API error:', err);
+      }
     };
 
     loadCachedOrFetch();
@@ -140,6 +154,12 @@ const CampDetails = () => {
                 onClick={() => window.open(camp.campRegistrationURL, "_blank", "noopener,noreferrer")}
               >
                 Register Now
+              </button>
+              <button
+                className={styles.backButton}
+                onClick={() => navigate(-1)}
+              >
+                Back to results
               </button>
             </Card>
           </aside>
