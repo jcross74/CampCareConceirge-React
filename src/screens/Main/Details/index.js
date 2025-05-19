@@ -7,6 +7,8 @@ import Card from "../../../components/Card";
 import { useLocation } from "react-router-dom";
 import TextInput from '../../../components/TextInput';
 import Dropdown from '../../../components/Dropdown';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../firebase';
 
 
 const CampDetails = () => {
@@ -16,32 +18,44 @@ const CampDetails = () => {
   const [venuePhotos, setVenuePhotos] = useState([]);
 
   useEffect(() => {
-    if (!camp.campVenue) return;
-    // Ensure Google Maps script with Places library is loaded in index.html
-    const service = new window.google.maps.places.PlacesService(
-      document.createElement('div')
-    );
-    const fullAddress = [
-      camp.campVenue,
-      camp.campStreet,
-      camp.campCity,
-      camp.campState
-    ]
-      .filter(Boolean)
-      .join(', ');
-    const request = {
-      query: fullAddress,
-      fields: ['photos']
-    };
-    service.findPlaceFromQuery(request, (results, status) => {
-      if (status === window.google.maps.places.PlacesServiceStatus.OK && results[0]?.photos) {
-        const urls = results[0].photos.slice(0,3).map(photo =>
-          photo.getUrl({ maxWidth: 800, maxHeight: 600 })
-        );
-        setVenuePhotos(urls);
+    if (!camp.id) return;
+    const docRef = doc(db, 'camps', camp.id);
+
+    const loadCachedOrFetch = async () => {
+      // Check Firestore for cached venuePhotos
+      const snap = await getDoc(docRef);
+      if (snap.exists() && Array.isArray(snap.data().venuePhotos) && snap.data().venuePhotos.length > 0) {
+        setVenuePhotos(snap.data().venuePhotos.slice(0, 2));
+        return;
       }
-    });
-  }, [camp.campVenue, camp.campCity]);
+      // Otherwise, fetch from Google Places
+      const service = new window.google.maps.places.PlacesService(
+        document.createElement('div')
+      );
+      const fullAddress = [
+        camp.campVenue,
+        camp.campStreet,
+        camp.campCity,
+        camp.campState
+      ]
+        .filter(Boolean)
+        .join(', ');
+      const request = { query: fullAddress, fields: ['photos'] };
+      service.findPlaceFromQuery(request, async (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && results[0]?.photos) {
+          const urls = results[0].photos.map(photo =>
+            photo.getUrl({ maxWidth: 800, maxHeight: 600 })
+          );
+          // Display first two photos immediately
+          setVenuePhotos(urls.slice(0, 2));
+          // Cache full list of URLs in Firestore
+          await updateDoc(docRef, { venuePhotos: urls });
+        }
+      });
+    };
+
+    loadCachedOrFetch();
+  }, [camp]);
 
   return (
     <>
