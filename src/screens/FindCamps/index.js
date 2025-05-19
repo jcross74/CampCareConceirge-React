@@ -1,22 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import cn from "classnames";
 import styles from "./FindCamps.module.sass";
 import TextInput from "../../components/TextInput";
 import Footer from "../../components/Footer";
 import MainNavigation from "../../components/MainNavigation";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const FindCamps = () => {
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
     
-    const handleSubmit = (searchValue) => {
-        console.log("Form submitted with value:", searchValue);
-        // Add your search logic here
+    const handleSubmit = async (searchValue) => {
+      try {
+        const campsRef = collection(db, "camps");
+        const q = query(
+          campsRef,
+          where("campTags", "array-contains", searchValue)
+        );
+        const snapshot = await getDocs(q);
+        const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        navigate("/results", { state: { results, searchTerm: searchValue } });
+      } catch (error) {
+        console.error("Search failed:", error);
+      }
     };
 
-    const handleCategoryClick = (categoryName) => {
-      navigate(`/results?tag=${encodeURIComponent(categoryName)}`);
+    const handleCategoryClick = async (categoryName) => {
+      try {
+        const campsRef = collection(db, "camps");
+        const q = query(
+          campsRef,
+          where("campTags", "array-contains", categoryName)
+        );
+        const snapshot = await getDocs(q);
+        const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        navigate("/results", { state: { results, searchTerm: categoryName } });
+      } catch (error) {
+        console.error("Category search failed:", error);
+      }
     };
     
     return (
