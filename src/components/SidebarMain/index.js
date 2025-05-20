@@ -60,38 +60,44 @@ const SidebarMain = ({ className, onClose }) => {
     const navigation = [
         {
             title: "Home",
-            icon: "home",
+            icon: "faHome",
+            viewBox: "0 0 576 512",
             url: "/",
         },
         {
             title: "About Us",
             slug: "about",
-            icon: "schedule",
+            icon: "faAbout",
+            viewBox: "0 0 576 512",
             url: "/about",
         },
         {
             title: "Find a Camp",
             slug: "camps",
-            icon: "profile-circle",
+            icon: "faFind",
+            viewBox: "0 0 576 512",
             url: "/find-camps",
         },
         {
             title: "Resources",
             slug: "resources",
-            icon: "store",
+            icon: "faResources",
+            viewBox: "0 0 576 512",
             url: "/resources",
         },
         {
             title: "Contact Us",
             slug: "contact",
-            icon: "lightning",
+            icon: "faContact",
+            viewBox: "0 0 576 512",
             url: "/contact",
         },
         ...(isAuthenticated && userRole === "1"
             ? [{
                 title: "Admin Dashboard",
                 slug: "admin-dashboard",
-                icon: "document",
+                icon: "faDashboard",
+                viewBox: "0 0 576 512",
                 url: "/admin/",
             }]
             : []),
@@ -99,20 +105,23 @@ const SidebarMain = ({ className, onClose }) => {
             ? [{
                 title: "Camp Dashboard",
                 slug: "camp-dashboard",
-                icon: "document",
+                icon: "faDashboard",
+                viewBox: "0 0 576 512",
                 url: "/admin/",
             }]
             : []),
         ...(
             isAuthenticated ? [{
-                title: "Log Out",
+                title: "Sign Out",
                 slug: "log-out",
-                icon: "logout",
+                icon: "faProfile",
+                viewBox: "0 0 576 512",
                 action: handleSignOut,
             }] : [{
                 title: "Sign In",
                 slug: "sign-in",
-                icon: "profile-circle",
+                icon: "faProfile",
+                viewBox: "0 0 576 512",
                 url: "/sign-in",
             }]
         )
@@ -126,14 +135,14 @@ const SidebarMain = ({ className, onClose }) => {
                 })}
             >
                 <button className={styles.close} onClick={onClose}>
-                    <Icon name="close" size="24" />
+                    <Icon name="close" size="24" viewBox="0 0 16 16" />
                 </button>
                 <Link className={styles.logo} to="/" onClick={onClose}>
                     <Image
                         className={styles.pic}
                         src="/images/logo-dark.png"
                         srcDark="/images/logo-light.png"
-                        alt="Core"
+                        alt="Camp Care Concierge"
                     />
                 </Link>
                 <div className={styles.menu}>
@@ -147,7 +156,7 @@ const SidebarMain = ({ className, onClose }) => {
                                 key={index}
                                 onClick={onClose}
                             >
-                                <Icon name={x.icon} size="24" />
+                                <Icon name={x.icon} size="24" viewBox={x.viewBox} />
                                 {x.title}
                             </NavLink>
                         ) : (
@@ -156,7 +165,7 @@ const SidebarMain = ({ className, onClose }) => {
                                 onClick={x.action}
                                 key={index}
                             >
-                                <Icon name={x.icon} size="24" />
+                                <Icon name={x.icon} size="24" viewBox={x.viewBox} />
                                 {x.title}
                             </button>
                         )
