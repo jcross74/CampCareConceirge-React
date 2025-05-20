@@ -8,8 +8,13 @@
   background: #3d3d3d
   color: #fff
   text-align: center
-  height: 35vh
+  height: 50vh
   min-height: 500px
+
+  +m
+    height: 350px
+    min-height: 0
+  
 
 .heroContent
   display: flex
@@ -24,46 +29,49 @@
 
 .heroContent h1
   font-size: 3em
-  font-weight: 700
+  font-weight: 600
+
+  +t
+    font-size: 3em
+
+  +m
+    font-size: 2.5em
 
 .container
-  max-width: 1024px
-  margin: auto
-  padding: 60px 40px
-  min-height: 600px
+    max-width: 1280px
+    margin: auto
 
-.resourcesSection
-  max-width: 900px
-  margin: 0 auto
-  padding-top: 60px
 
 .intro
   text-align: center
   margin-bottom: 32px
 
 .intro h2
-  font-size: 28px
+  font-size: 2em
   font-weight: 600
   margin-bottom: 12px
 
 .intro p
-  font-size: 1.3em
+  font-size: 1.5em
   font-weight: 400
   color: #666
   line-height: 1.6
 
-+m
-  .container
-    padding: 40px 20px
+  +m
+    font-size: 1.2em
 
   .resourcesSection
     padding-top: 40px
 
   .intro h2
     font-size: 24px
-// Contact Us page styles
+
+
 .contactSection
-  padding: 40px 20px
+  margin: auto
+  padding: 60px 40px 80px 40px
+  max-width: 1280px
+
 
 .form
   background: #E2E8F0
