@@ -1,5 +1,5 @@
 // src/screens/SignIn/index.js
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import cn from "classnames";
 import styles from "./SignIn.module.sass";
 import { use100vh } from "react-div-100vh";
@@ -8,9 +8,9 @@ import TextInput from "../../components/TextInput";
 import Image from "../../components/Image";
 import Modal from "../../components/Modal";
 
-// Import Firebase Auth functions and your app initialization
 import {
   getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
@@ -18,7 +18,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { app } from "../../firebase";
-import { getDoc, setDoc, doc, query, collection, where, getDocs } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 const SignIn = () => {
@@ -26,7 +26,6 @@ const SignIn = () => {
   const navigate = useNavigate();
   const auth = getAuth(app);
 
-  // State for controlled form inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -34,96 +33,82 @@ const SignIn = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
 
-  // Escape key handler for modal
   const escHandler = useCallback(
-    (e) => {
-      if (e.keyCode === 27 && modalOpen) {
-        setModalOpen(false);
-      }
-    },
+    (e) => { if (e.keyCode === 27 && modalOpen) setModalOpen(false); },
     [modalOpen]
   );
   useEffect(() => {
-    document.addEventListener("keydown", escHandler, false);
-    return () => document.removeEventListener("keydown", escHandler, false);
+    document.addEventListener("keydown", escHandler);
+    return () => document.removeEventListener("keydown", escHandler);
   }, [escHandler]);
 
-  // Sign in with email/password
+  // Finalize sign-in: write user doc if new, set cookie, navigate
+  const finishSignIn = async (user) => {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      let role;
+      if (snap.exists()) {
+        role = snap.data().role;
+      } else {
+        role = "3";
+        await setDoc(userRef, {
+          authID: user.uid,
+          avatar: "",
+          email: user.email,
+          memberSince: new Date(),
+          nameFirst: "",
+          nameLast: "",
+          role,
+        });
+      }
+      document.cookie = `userUID=${user.uid}; role=${role}; path=/;`;
+      navigate("/");
+    } catch (err) {
+      console.error("Error finalizing sign in:", err);
+      setErrorMessage("An error occurred during sign-in. Please try again.");
+    }
+  };
+
+  // Listen to auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) finishSignIn(user);
+    });
+    return unsubscribe;
+  }, [auth]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
-      document.cookie = `userUID=${userCredential.user.uid}; path=/;`;
-    } catch (error) {
-      console.error("Error signing in:", error);
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      console.error("Sign in error:", err);
       setErrorMessage("Invalid email or password. Please try again.");
     }
   };
 
-  // Social logins
-  const handleGoogleSignIn = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      navigate("/");
-      const q = query(collection(db, "users"), where("authID", "==", result.user.uid));
-      const snap = await getDocs(q);
-      if (snap.empty) {
-        await setDoc(doc(db, "users", result.user.uid), {
-          authID: result.user.uid,
-          avatar: "",
-          email: result.user.email,
-          memberSince: new Date(),
-          nameFirst: "",
-          nameLast: "",
-          role: "3",
-        });
-      }
-      document.cookie = `userUID=${result.user.uid}; path=/;`;
-    } catch (error) {
-      console.error("Error signing in with Google:", error);
+  const handleGoogleSignIn = () =>
+    signInWithPopup(auth, new GoogleAuthProvider()).catch((err) => {
+      console.error("Google sign-in error:", err);
       setErrorMessage("Unable to sign in with Google. Please try again.");
-    }
-  };
-  const handleAppleSignIn = async () => {
-    try {
-      const provider = new OAuthProvider("apple.com");
-      const result = await signInWithPopup(auth, provider);
-      navigate("/");
-      const q = query(collection(db, "users"), where("authID", "==", result.user.uid));
-      const snap = await getDocs(q);
-      if (snap.empty) {
-        await setDoc(doc(db, "users", result.user.uid), {
-          authID: result.user.uid,
-          avatar: "",
-          email: result.user.email,
-          memberSince: new Date(),
-          nameFirst: "",
-          nameLast: "",
-          role: "3",
-        });
-      }
-      document.cookie = `userUID=${result.user.uid}; path=/;`;
-    } catch (error) {
-      console.error("Error signing in with Apple:", error);
-      setErrorMessage("Unable to sign in with Apple. Please try again.");
-    }
-  };
+    });
 
-  // Reset password via Firebase
+  const handleAppleSignIn = () =>
+    signInWithPopup(auth, new OAuthProvider("apple.com")).catch((err) => {
+      console.error("Apple sign-in error:", err);
+      setErrorMessage("Unable to sign in with Apple. Please try again.");
+    });
+
   const handleResetPassword = async () => {
     try {
-      if (!resetEmail) {
-        setErrorMessage("Please provide a valid email address.");
-        return;
-      }
+      if (!resetEmail) { setErrorMessage("Please provide a valid email address."); return; }
       await sendPasswordResetEmail(auth, resetEmail);
       setInfoMessage(`Password reset email sent to ${resetEmail}.`);
       setErrorMessage("");
       setModalOpen(false);
-    } catch (error) {
-      console.error("Error sending password reset email:", error);
+    } catch (err) {
+      console.error("Reset error:", err);
       setErrorMessage("Failed to send reset email. Please try again.");
       setInfoMessage("");
     }
@@ -154,7 +139,7 @@ const SignIn = () => {
                 src="/images/content/apple-dark.svg"
                 srcDark="/images/content/apple-light.svg"
                 alt="Apple"
-              />{" "}
+              />
               Apple ID
             </button>
           </div>
@@ -207,7 +192,7 @@ const SignIn = () => {
           </div>
 
           <div className={styles.info}>
-            Don’t have an Camp Care Concierge account?{" "}
+            Don’t have a Camp Care Concierge account?{" "}
             <Link className={styles.link} to="/sign-up">
               Sign up
             </Link>

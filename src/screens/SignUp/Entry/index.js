@@ -1,20 +1,27 @@
+// src/screens/SignUp/Entry/index.js
 import React from "react";
 import cn from "classnames";
 import styles from "./Entry.module.sass";
 import TextInput from "../../../components/TextInput";
 import Image from "../../../components/Image";
 
-const Entry = ({ onConfirm }) => {
+const Entry = ({ onConfirm, onGoogleSignUp, onAppleSignUp }) => {
   return (
     <div className={styles.entry}>
       <div className={styles.head}>
         <div className={styles.info}>Sign in with your social media account</div>
         <div className={styles.btns}>
-          <button className={cn("button-stroke", styles.button)}>
+          <button
+            className={cn("button-stroke", styles.button)}
+            onClick={onGoogleSignUp}
+          >
             <img src="/images/content/google.svg" alt="Google" />
             Google
           </button>
-          <button className={cn("button-stroke", styles.button)}>
+          <button
+            className={cn("button-stroke", styles.button)}
+            onClick={onAppleSignUp}
+          >
             <Image
               className={styles.pic}
               src="/images/content/apple-dark.svg"

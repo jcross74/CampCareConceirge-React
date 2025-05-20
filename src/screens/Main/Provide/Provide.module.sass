@@ -18,7 +18,13 @@
        .container
        grid-template-columns: 1fr
        gap: 48px
+       padding: 0 60px
 
+  +m
+       .container
+       grid-template-columns: 1fr
+       gap: 16px
+       padding: 0 40px
 
 .provide_content
   display: flex
@@ -30,12 +36,18 @@
   font-weight: 700
   line-height: 1.2
 
+  +m
+      font-size: 2em
+
 .description
   font-size: 18px
   font-weight: 400
   line-height: 1.6
   // color: var(--n2)
   color: #4a4a4a
+
+  +m
+      font-size: 16px
 
 .list
   list-style: none
