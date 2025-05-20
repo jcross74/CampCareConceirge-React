@@ -4,7 +4,7 @@ import styles from "./Dropdown.module.sass";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import Icon from "../../Icon";
 
-const Dropdown = ({ className, item, visibleSidebar, setValue, onClose }) => {
+const Dropdown = ({ className, item: { icon, title, dropdown, add, slug, viewBox }, visibleSidebar, setValue, onClose }) => {
     const [visible, setVisible] = useState(false);
 
     const { pathname } = useLocation();
@@ -20,15 +20,15 @@ const Dropdown = ({ className, item, visibleSidebar, setValue, onClose }) => {
                 className={cn(
                     styles.head,
                     {
-                        [styles.active]: pathname.includes(item.slug),
+                        [styles.active]: pathname.includes(slug),
                     },
                     { [styles.wide]: visibleSidebar }
                 )}
                 onClick={() => handleClick()}
             >
-                <Icon name={item.icon} size="24" />
-                {item.title}
-                <Icon name="arrow-down" size="24" />
+                <Icon name={icon} size="24" viewBox={viewBox} />
+                {title}
+                <Icon name="arrow-down" size="24" viewBox="0 0 512 512" />
             </button>
         );
     };
@@ -40,12 +40,12 @@ const Dropdown = ({ className, item, visibleSidebar, setValue, onClose }) => {
                 className,
                 { [styles.active]: visible },
                 {
-                    [styles.active]: pathname.includes(item.slug),
+                    [styles.active]: pathname.includes(slug),
                 },
                 { [styles.wide]: visibleSidebar }
             )}
         >
-            {item.add ? (
+            {add ? (
                 <div
                     className={cn(styles.top, {
                         [styles.active]: pathname.startsWith("/admin/camps/add"),
@@ -60,14 +60,14 @@ const Dropdown = ({ className, item, visibleSidebar, setValue, onClose }) => {
                         to="/admin/camps/add"
                         onClick={onClose}
                     >
-                        <Icon name="plus" size="10" />
+                       <Icon name="faPlus" size="24" viewBox="0 0 512 512" />
                     </Link>
                 </div>
             ) : (
                 <Head />
             )}
             <div className={styles.body}>
-                {item.dropdown.map((x, index) => (
+                {dropdown.map((x, index) => (
                     <NavLink
                         className={cn(styles.link, {
                             [styles.active]: pathname === x.url,
@@ -85,7 +85,7 @@ const Dropdown = ({ className, item, visibleSidebar, setValue, onClose }) => {
                                 {x.counter}
                             </div>
                         ) : (
-                            <Icon name="arrow-next" size="24" />
+                            <Icon name="arrow-next" size="24" viewBox="0 0 512 512" />
                         )}
                     </NavLink>
                 ))}

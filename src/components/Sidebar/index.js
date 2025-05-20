@@ -37,14 +37,16 @@ const Sidebar = ({ className, onClose }) => {
 
     const navigation = [
         {
-            title: "Home",
-            icon: "home",
+            title: "Dashboard",
+            icon: "faHome",
+            viewBox: "0 0 576 512",
             url: "/admin/",
         },
         {
             title: "Camps",
             slug: "camps",
-            icon: "schedule",
+            icon: "faCamps",
+            viewBox: "0 0 576 512",
             add: true,
             dropdown: [
                 {
@@ -66,7 +68,8 @@ const Sidebar = ({ className, onClose }) => {
         {
             title: "Users",
             slug: "users",
-            icon: "profile-circle",
+            icon: "faProfile",
+            viewBox: "0 0 512 512",
             dropdown: [
                 {
                     title: "Overview",
@@ -77,7 +80,8 @@ const Sidebar = ({ className, onClose }) => {
         {
             title: "Providers",
             slug: "providers",
-            icon: "store",
+            icon: "faProviders",
+            viewBox: "0 0 512 512",
             dropdown: [
                 {
                     title: "Overview",
@@ -93,7 +97,8 @@ const Sidebar = ({ className, onClose }) => {
         {
             title: "Data",
             slug: "income",
-            icon: "lightning",
+            icon: "faData",
+            viewBox: "0 0 512 512",
             dropdown: [
                 {
                     title: "Format",
@@ -119,14 +124,14 @@ const Sidebar = ({ className, onClose }) => {
                 })}
             >
                 <button className={styles.close} onClick={onClose}>
-                    <Icon name="close" size="24" />
+                    <Icon name="close" size="24" viewBox="0 0 16 16" />
                 </button>
                 <Link className={styles.logo} to="/" onClick={onClose}>
                     <Image
                         className={styles.pic}
                         src="/images/logo-dark.png"
                         srcDark="/images/logo-light.png"
-                        alt="Core"
+                        alt="Camp Care Concierge"
                     />
                 </Link>
                 <div className={styles.menu}>
@@ -140,9 +145,18 @@ const Sidebar = ({ className, onClose }) => {
                                 key={index}
                                 onClick={onClose}
                             >
-                                <Icon name={x.icon} size="24" />
+                                <Icon name={x.icon} size="24" viewBox={x.viewBox} />
                                 {x.title}
                             </NavLink>
+                        ) : x.action ? (
+                            <button
+                                className={styles.item}
+                                onClick={x.action}
+                                key={index}
+                            >
+                                <Icon name={x.icon} size="24" viewBox={x.viewBox} />
+                                {x.title}
+                            </button>
                         ) : (
                             <Dropdown
                                 className={styles.dropdown}
@@ -150,6 +164,7 @@ const Sidebar = ({ className, onClose }) => {
                                 setValue={setVisible}
                                 key={index}
                                 item={x}
+                                viewBox={x.viewBox}
                                 onClose={onClose}
                             />
                         )
@@ -159,8 +174,8 @@ const Sidebar = ({ className, onClose }) => {
                     className={styles.toggle}
                     onClick={() => setVisible(!visible)}
                 >
-                    <Icon name="arrow-right" size="24" />
-                    <Icon name="close" size="24" />
+                    <Icon name="arrow-right" size="24" viewBox="0 0 16 16" />
+                    <Icon name="close" size="24" viewBox="0 0 16 16" />
                 </button>
                 <div className={styles.foot}>
                     <Theme className={styles.theme} visibleSidebar={visible} />
