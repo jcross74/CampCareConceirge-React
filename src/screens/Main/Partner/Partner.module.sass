@@ -4,6 +4,10 @@
   padding: 80px 0
   position: relative
 
+  +t
+       .section
+       padding: 30px 0
+
 .container
   display: grid
   grid-template-columns: repeat(1, 1fr)
@@ -16,7 +20,14 @@
   +t
        .container
        grid-template-columns: 1fr
-       gap: 20px
+       gap: 48px
+       padding: 0 40px
+
+  +m
+       .container
+       grid-template-columns: 1fr
+       gap: 16px
+
 
 .partner_content
   display: flex
@@ -28,12 +39,20 @@
   font-weight: 700
   line-height: 1.2
 
+  +m
+       .title
+       font-size: 2em
+
 .description
   font-size: 24px
   font-weight: 400
   line-height: 1.6
   // color: var(--n2)
   color: #4a4a4a
+
+  +m
+       .description
+       font-size: 1em
 
 .partner_image
   width: 100%
