@@ -1,17 +1,18 @@
 @import ../../styles/helpers
 
 .container
-  
-  background: #f8f9fc
-  min-height: 600px
+    max-width: 1280px
+    background: #FFFFFF
+    margin: auto
 
 .hero
   background: #3d3d3d
-  
   color: #fff
   text-align: center
-  height: 35vh
-  min-height: 500px
+  height: 50vh
+
+  +m
+    height: 350px
 
 .heroContent
   display: flex
@@ -21,17 +22,19 @@
   justify-content: center
   align-items: center
   height: 100%
-  min-height: 200px
   flex-direction: column
 
 .heroContent h1
   font-size: 3em
   font-weight: 700
 
+  +m
+    font-size: 2em
+
 .findCampsSection
-  max-width: 900px
-  margin: 0 auto
-  padding-top: 60px
+  margin: auto
+  padding: 0 40px 0 40px
+  max-width: 1280px
 
 .intro
   text-align: left
@@ -57,7 +60,7 @@
 
   .intro h2
     font-size: 24px
-// Responsive category tiles grid and styling for categories section
+
 .categoriesSection
   padding: 40px 20px
   text-align: center
@@ -67,6 +70,10 @@
   font-weight: 600
   margin-bottom: 12px
 
+  +m
+    font-size: 2em
+    line-height: 1.3em
+
 .categoriesSection p
   font-size: 1.3em
   font-weight: 400
@@ -74,6 +81,9 @@
   line-height: 1.6
   max-width: 700px
   margin: 0 auto 24px
+
+  +m
+    font-size: 1em
 
 .campContent
   margin-bottom: 60px
@@ -100,10 +110,13 @@
   height: 350px
   object-fit: cover
 
+  +m
+    height: 250px
+
 .label
   position: absolute
-  bottom: 12px
-  left: 12px
+  bottom: 16px
+  left: 20px
   color: #fff
   font-weight: 600
   font-size: 18px
