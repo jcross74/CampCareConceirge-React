@@ -4,7 +4,17 @@ import styles from "./File.module.sass";
 import Icon from "../Icon";
 import Tooltip from "../Tooltip";
 
-const File = ({ className, label, tooltip, title, value, onChange }) => {
+const File = ({
+  className,
+  label,
+  tooltip,
+  title,
+  value,
+  onChange,
+  accept,
+  multiple = false,
+  ...rest
+}) => {
   const handleChange = (e) => {
     const files = Array.from(e.target.files);
     if (onChange) {
@@ -31,8 +41,10 @@ const File = ({ className, label, tooltip, title, value, onChange }) => {
         <input
           className={styles.input}
           type="file"
-          multiple
+          accept={accept}
+          multiple={multiple}
           onChange={handleChange}
+          {...rest}
         />
         <div className={styles.box}>
           <Icon name="upload" size="24" />

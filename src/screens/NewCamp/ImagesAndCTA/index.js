@@ -21,11 +21,12 @@ const ImagesAndCTA = ({
   setCampState,
   campZip,
   setCampZip,
-  campImages,
-  setCampImages,
+  selectedFiles,
+  setSelectedFiles,
 }) => {
   // Local state for the city dropdown options
   const [cityOptions, setCityOptions] = useState([]);
+  const [fileError, setFileError] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -75,6 +76,34 @@ const ImagesAndCTA = ({
     };
   }, []);
 
+  const handleFileUpload = (input) => {
+    setFileError("");
+    let file;
+    if (input?.target?.files?.length) {
+      file = input.target.files[0];
+    } else if (Array.isArray(input) && input.length) {
+      file = input[0];
+    } else {
+      file = input;
+    }
+    if (!file || typeof file.name !== "string") {
+      setFileError("No valid file selected.");
+      return;
+    }
+    const ext = file.name.split('.').pop().toLowerCase();
+    const validTypes = ["image/png", "image/gif", "image/jpeg", "image/webp"];
+    const validExts = ["png", "gif", "jpg", "jpeg", "webp"];
+    if (!(validTypes.includes(file.type) || validExts.includes(ext))) {
+      setFileError("Only PNG, GIF, JPG, and WEBP files are allowed.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setFileError("File size must be under 2 MB.");
+      return;
+    }
+    setSelectedFiles(prev => [...prev, file]);
+  };
+
   return (
     <Card
       className={cn(styles.card, className)}
@@ -95,6 +124,40 @@ const ImagesAndCTA = ({
           value={campVenue}
           onChange={(e) => setCampVenue(e.target.value)}
         />
+        <File
+          className={styles.field}
+          label="Upload Image"
+          name="campImage"
+          id="campImage"
+          accept=".png,.gif,.jpg,.jpeg,.webp"
+          onChange={handleFileUpload}
+        />
+        {fileError && <div className={styles.error}>{fileError}</div>}
+        {selectedFiles.length > 0 && (
+          <div className={styles.previewThumbnails}>
+            {selectedFiles.map((file, idx) => (
+              <div key={idx} className={styles.thumbnailItem}>
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`thumb-${idx}`}
+                  className={styles.previewThumbnail}
+                />
+                <button
+                  type="button"
+                  className={styles.removeButton}
+                  onClick={() =>
+                    setSelectedFiles(prev => [
+                      ...prev.slice(0, idx),
+                      ...prev.slice(idx + 1)
+                    ])
+                  }
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         <TextInput
           className={styles.field}

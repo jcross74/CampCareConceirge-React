@@ -12,7 +12,7 @@ import Discussion from "./Discussion";
 import Preview from "./Preview";
 import Panel from "./Panel";
 import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from "../../firebase";
 
 const NewCamp = () => {
@@ -44,6 +44,8 @@ const NewCamp = () => {
   const [campStatus, setCampStatus] = useState("Pending");
   const [campCost, setCampCost] = useState(0); // Number value
   const [campFormat, setCampFormat] = useState("Select");
+  const [campImages, setCampImages] = useState([]); // Array of image URLs
+  const [selectedFiles, setSelectedFiles] = useState([]); // Raw File objects awaiting upload
 
   const navigate = useNavigate();
 
@@ -72,6 +74,14 @@ const NewCamp = () => {
       // Reference the "camps" collection
       const campsRef = collection(db, "camps");
 
+      // Upload selected files and collect URLs
+      const urls = [];
+      for (const file of selectedFiles) {
+        const storageRef = ref(getStorage(app), `campImages/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        const downloadUrl = await getDownloadURL(storageRef);
+        urls.push(downloadUrl);
+      }
 
       // Convert start and end dates to Firestore Timestamps
       const startTimestamp = Timestamp.fromDate(startDateObj);
@@ -99,6 +109,7 @@ const NewCamp = () => {
         campStatus,                           // String
         campCost: Number(campCost),            // Number
         campFormat,                           // String
+        campImages: urls, // Array of uploaded image URLs
         campModified: modifiedTimestamp       // Timestamp
       });
 
@@ -124,6 +135,8 @@ const NewCamp = () => {
       setCampStatus("Pending");
       setCampCost(0);
       setCampFormat("Select");
+      setCampImages([]);
+      setSelectedFiles([]);
 
       // Stay on the same page (do not redirect)
       // Optionally, you could focus back to the form or display a success message.
@@ -181,6 +194,10 @@ const NewCamp = () => {
             setCampState={setCampState}
             campZip={campZip}
             setCampZip={setCampZip}
+            campImages={campImages}
+            setCampImages={setCampImages}
+            selectedFiles={selectedFiles}
+            setSelectedFiles={setSelectedFiles}
           />
           <CategoryAndAttibutes
             className={styles.card}

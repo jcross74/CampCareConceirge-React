@@ -80,8 +80,9 @@ const CampDetails = () => {
           <img
             className={styles.mainImage}
             src={
-              camp.campImage?.[0] ||
-              "https://firebasestorage.googleapis.com/v0/b/campcare-react.firebasestorage.app/o/campImages%2FCamp_Image.png?alt=media&token=aec0e683-4681-4fba-95e5-145951685a60"
+              Array.isArray(camp.campImages) && camp.campImages.length > 0
+                ? camp.campImages[0]
+                : "https://firebasestorage.googleapis.com/v0/b/campcare-react.firebasestorage.app/o/campImages%2FCamp_Image.png?alt=media&token=aec0e683-4681-4fba-95e5-145951685a60"
             }
             alt={camp.campName}
           />

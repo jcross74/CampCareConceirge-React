@@ -7,7 +7,7 @@ import Theme from "../Theme";
 import Help from "./Help";
 import Image from "../Image";
 import { getDocs, collection, query, where } from "firebase/firestore";
-import { db } from "../../firebase"; // adjust path if needed
+import { db } from "../../firebase"; 
 import Cookies from "js-cookie";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
