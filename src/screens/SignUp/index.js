@@ -101,6 +101,7 @@ const SignUp = () => {
   };
 
   return (
+    <div className={styles.container}>
     <div className={styles.row}>
       <div className={styles.col}>
         <div className={styles.wrap}>
@@ -169,6 +170,7 @@ const SignUp = () => {
           {errorMessage && <div className={styles.loginFeedback}>{errorMessage}</div>}
         </div>
       </div>
+    </div>
     </div>
   );
 };

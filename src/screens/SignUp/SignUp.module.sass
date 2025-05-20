@@ -1,5 +1,8 @@
 @import ../../styles/helpers
 
+.container
+    width: 100%
+
 .row
     position: relative
     display: flex
@@ -19,6 +22,8 @@
         width: 400px
         background: $n2
         +t
+            display: none
+        +m
             display: none
         +dark
             background: $n8
