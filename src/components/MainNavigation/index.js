@@ -9,7 +9,7 @@ import Messages from "./Messages";
 import Notification from "./Notification";
 import User from "./User";
 
-const MainNavigation = ({ onOpen }) => {
+const MainNavigation = ({ onOpen = () => {} }) => {
   const [visible, setVisible] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,9 +23,10 @@ const MainNavigation = ({ onOpen }) => {
     return () => unsubscribe();
   }, []);
 
-  const handleClick = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+const handleClick = () => {
+  setIsSidebarOpen(!isSidebarOpen);
+  onOpen();
+};
 
   return (
     <>

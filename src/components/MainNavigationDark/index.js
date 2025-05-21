@@ -7,8 +7,9 @@ import Icon from "../Icon";
 import Messages from "./Messages";
 import Notification from "./Notification";
 import User from "./User";
+import SidebarMain from '../SidebarMain';
 
-const MainNavigationDark = ({ onOpen }) => {
+const MainNavigationDark = ({ onOpen = () => {} }) => {
   const [visible, setVisible] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -22,42 +23,45 @@ const MainNavigationDark = ({ onOpen }) => {
   }, []);
 
   const handleClick = () => {
+    setVisible(prev => !prev);
     onOpen();
-    setVisible(false);
   };
 
   return (
-    <header className={styles.header}>
-      <button className={styles.burger} onClick={handleClick}></button>
-      <div>
-        <div className={styles.branding}>
-        <Link to="/" className={styles.link}>
-          <img src="images/CampCare_Logo_Dark.png" alt="Logo" className={styles.logo} />
-          </Link>
+    <>
+      <header className={styles.header}>
+        <button className={styles.burger} onClick={handleClick}></button>
+        <div>
+          <div className={styles.branding}>
+          <Link to="/" className={styles.link}>
+            <img src="images/CampCare_Logo_Dark.png" alt="Logo" className={styles.logo} />
+            </Link>
+          </div>
         </div>
-      </div>
-      <div className={styles.btns}>
-        <Link className={styles.link} to="/about">
-          About Us
-        </Link>
-        <Link className={styles.link} to="/find-camps">
-          Find a Camp
-        </Link>
-        <Link className={styles.link} to="/resources">
-          Resources
-        </Link>
-        <Link className={styles.link} to="/contact">
-          Contact Us
-        </Link>
-        {isAuthenticated && <User className={styles.user} />}
-        {/* Render Sign In button only if the user is not authenticated */}
-        {!isAuthenticated && (
-          <Link className={cn("button", styles.button)} to="/sign-in">
-            Sign in
+        <div className={styles.btns}>
+          <Link className={styles.link} to="/about">
+            About Us
           </Link>
-        )}
-      </div>
-    </header>
+          <Link className={styles.link} to="/find-camps">
+            Find a Camp
+          </Link>
+          <Link className={styles.link} to="/resources">
+            Resources
+          </Link>
+          <Link className={styles.link} to="/contact">
+            Contact Us
+          </Link>
+          {isAuthenticated && <User className={styles.user} />}
+          {/* Render Sign In button only if the user is not authenticated */}
+          {!isAuthenticated && (
+            <Link className={cn("button", styles.button)} to="/sign-in">
+              Sign in
+            </Link>
+          )}
+        </div>
+      </header>
+      {visible && <SidebarMain onClose={() => setVisible(false)} />}
+    </>
   );
 };
 
