@@ -227,12 +227,6 @@ const Results = () => {
                         <div className={styles.topRow}>
                           <div className={styles.heading}>{item.campName}</div>
                         </div>
-                        <p className={styles.description}>
-                          {item.campDescription.length > 200
-                            ? item.campDescription.slice(0, 200) + '… '
-                            : item.campDescription}
-                          <strong>Learn more</strong>
-                        </p>
                         <div className={styles.meta}>
                           <span>
                             {item.campCity}, {item.campState} {item.campZip}
