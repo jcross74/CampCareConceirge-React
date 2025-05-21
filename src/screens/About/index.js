@@ -12,7 +12,7 @@ const About = () => {
       <MainNavigation />
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1>Committed to Excellence</h1>
+          <h1>About Us</h1>
         </div>
       </section>
 <div className={styles.container}>
@@ -21,19 +21,10 @@ const About = () => {
           <div className={styles.imagePlaceholder}></div>
           <div className={styles.text}>
             <p>
-              Camp Care Concierge was founded by three parents in Fairfax County
-              who understand firsthand how challenging it can be to find clear,
-              reliable information about local camps and activities. That’s why
-              we spent over a year thoughtfully developing a customized search
-              tool designed to make this process easier for families. Our goal
-              is to provide accurate, consistent, and up-to-date information to
-              help you confidently explore the best options for your child’s
-              enrichment and enjoyment.
+              Camp Care Concierge was founded by three Fairfax County parents who know how challenging it can be to find clear, reliable information about local camps and activities. That’s why we dedicated two years to thoughtfully develop a customized search tool that makes the data collection process simpler for families. Our goal is to provide accurate, consistent, and up-to-date information, helping you confidently choose the best options for your child’s growth and enjoyment.
             </p>
             <h2>
-              Our mission is to make finding the right camps and activities
-              simple and stress-free—with clear, reliable info curated by
-              parents, for parents.
+              Our mission is simple – to take the stress out of finding camps and activities, with trusted, parent-curated information that you can rely on.
             </h2>
           </div>
         </div>
@@ -45,15 +36,13 @@ const About = () => {
           <div className={styles.item}>
             <h4>Parent-Centered</h4>
             <p>
-              Built by parents who understand your needs, every feature is
-              designed to make your search easier, faster, and more intuitive.
+              Our search feature was crafted by local parents who understand what truly matters – the safety and happiness of your children. We set out to transform a complicated, often chaotic process into something faster, simpler, and more intuitive, freeing up your time for what matters most.
             </p>
           </div>
           <div className={styles.item}>
             <h4>Reliable</h4>
             <p>
-              We provide accurate, up-to-date, and standardized details so you
-              can make confident decisions without the guesswork.
+              Our search feature delivers precise, up-to-date, and local standardized  information, empowering you to make confident decisions on camps and actitives.
             </p>
           </div>
           <div className={styles.item}>
@@ -66,9 +55,7 @@ const About = () => {
           <div className={styles.item}>
             <h4>Local Expertise</h4>
             <p>
-              We focus on camps and activities in your community, offering
-              insights and options tailored to where you live and what your
-              family values.
+              Designed for Fairfax County families, our search tool provides hyper-local results, helping to support small businesses and larger camp providers in our community, with insights that match your family’s needs and interests.
             </p>
           </div>
         </div>

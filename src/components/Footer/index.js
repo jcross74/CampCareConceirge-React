@@ -44,11 +44,6 @@ const links = [
   },
   {
     id: 8,
-    title: "Blog",
-    url: "#",
-  },
-  {
-    id: 9,
     title: "Parent Resources",
     url: "#",
   },
@@ -93,7 +88,7 @@ export default function Footer() {
               Connecting Families to Camps & Activities
             </Heading>
             <div className={cn("subheading-small", styles.email)}>
-              hello@campcareconceirge.com
+              info@campcareconceirge.com
             </div>
           </div>
         </div>
@@ -104,10 +99,10 @@ export default function Footer() {
           <div className={styles.business_info}>
             <div>
               <div className={cn("paragraph-small", styles.address)}>
-                123 Main Street, Hometown, USA
+                Alexandria, VA
               </div>
               <div className={cn("paragraph-small", styles.phone)}>
-                (123) 456-7890
+                Phone Number Coming Soon
               </div>
             </div>
 
