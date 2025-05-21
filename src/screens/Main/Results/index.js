@@ -8,6 +8,8 @@ import Footer from '../../../components/Footer';
 import Card from '../../../components/Card';
 import TextInput from '../../../components/TextInput';
 import Dropdown from '../../../components/Dropdown';
+import Modal from '../../../components/Modal';
+import Icon from '../../../components/Icon';
 import styles from './Results.module.sass';
 
 const Results = () => {
@@ -22,6 +24,7 @@ const Results = () => {
   const [ageRange, setAgeRange] = useState('');
   const [cost, setCost] = useState('');
   const [filteredResults, setFilteredResults] = useState(initialResults);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   useEffect(() => {
     const term = searchTerm.toLowerCase();
@@ -108,69 +111,87 @@ const Results = () => {
   return (
     <>
       <MainNavigationDark />
+
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.resultsPage}>
-            <aside className={styles.sidebar}>
-              <Card className={styles.card}>
-                <div className={styles.filterTitle}>Find Camps & Activities</div>
-                <form className={styles.filters} onSubmit={handleFilter}>
-                  <TextInput
-                    type="text"
-                    placeholder="Keywords"
-                    value={keyword}
-                    onChange={e => setKeyword(e.target.value)}
-                  />
-                  <Dropdown
-                    className={cn(styles.field, styles.dropdownMargin)}
-                    placeholder="Locations"
-                    value={locationFilter || 'Locations'}
-                    setValue={setLocationFilter}
-                    options={[
-                      "Alexandria","Annandale","Burke","Centreville","Chantilly",
-                      "Clifton","Dunn Loring","Fairfax","Fairfax Station","Falls Church",
-                      "Fort Belvoir","Great Falls","Herndon","Lorton","McLean",
-                      "Oakton","Reston","Springfield","Vienna","Virtual","West McLean"
-                    ]}
-                  />
-                  <Dropdown
-                    className={cn(styles.field, styles.dropdownMargin)}
-                    placeholder="Camp Type"
-                    value={campType || 'Camp Type'}
-                    setValue={setCampType}
-                    options={["Day Camp","Art Camp","STEM Camp","Sports Camp"]}
-                  />
-                  <Dropdown
-                    className={styles.dropdown}
-                    placeholder="Age Range"
-                    value={ageRange || 'Age Range'}
-                    setValue={setAgeRange}
-                    options={["3-5","6-8","9-11","12+"]}
-                  />
-                  <Dropdown
-                    className={styles.dropdown}
-                    placeholder="Cost"
-                    value={cost || 'Cost'}
-                    setValue={setCost}
-                    options={["Free","$1-$100","$101-$250","$251+"]}
-                  />
-                  <button type="submit" className={styles.submitButton}>
-                    Filter
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.clearButton}
-                    onClick={handleClearFilters}
-                  >
-                    Clear Filters
-                  </button>
-                </form>
-              </Card>
-            </aside>
             <main className={styles.resultsContent}>
               <div className={styles.resultsHeader}>
-                Showing results for "{searchTerm}"
+                <span>{filteredResults.length} results for "{searchTerm}"</span>
+                <button
+                  type="button"
+                  className={styles.filterButton}
+                  onClick={() => setShowFilterModal(true)}
+                >
+                  <Icon name="faSliders" size={16} className={styles.filterIcon} />
+                  <span>Filters</span>
+                </button>
               </div>
+
+              <Modal visible={showFilterModal} onClose={() => setShowFilterModal(false)}>
+                <Card className={styles.card}>
+                  <div className={styles.filterTitle}>Find Camps & Activities</div>
+                  <form
+                    className={styles.filters}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleFilter(e);
+                      setShowFilterModal(false);
+                    }}
+                  >
+                    <TextInput
+                      type="text"
+                      placeholder="Keywords"
+                      value={keyword}
+                      onChange={e => setKeyword(e.target.value)}
+                    />
+                    <Dropdown
+                      className={cn(styles.field, styles.dropdownMargin)}
+                      placeholder="Locations"
+                      value={locationFilter || 'Locations'}
+                      setValue={setLocationFilter}
+                      options={[
+                        "Alexandria","Annandale","Burke","Centreville","Chantilly",
+                        "Clifton","Dunn Loring","Fairfax","Fairfax Station","Falls Church",
+                        "Fort Belvoir","Great Falls","Herndon","Lorton","McLean",
+                        "Oakton","Reston","Springfield","Vienna","Virtual","West McLean"
+                      ]}
+                    />
+                    <Dropdown
+                      className={cn(styles.field, styles.dropdownMargin)}
+                      placeholder="Camp Type"
+                      value={campType || 'Camp Type'}
+                      setValue={setCampType}
+                      options={["Day Camp","Art Camp","STEM Camp","Sports Camp"]}
+                    />
+                    <Dropdown
+                      className={styles.dropdown}
+                      placeholder="Age Range"
+                      value={ageRange || 'Age Range'}
+                      setValue={setAgeRange}
+                      options={["3-5","6-8","9-11","12+"]}
+                    />
+                    <Dropdown
+                      className={styles.dropdown}
+                      placeholder="Cost"
+                      value={cost || 'Cost'}
+                      setValue={setCost}
+                      options={["Free","$1-$100","$101-$250","$251+"]}
+                    />
+                    <button type="submit" className={styles.submitButton}>
+                      Filter
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.clearButton}
+                      onClick={handleClearFilters}
+                    >
+                      Clear Filters
+                    </button>
+                  </form>
+                </Card>
+              </Modal>
+
               <div className={styles.campGrid}>
                 {pagedResults.length === 0 ? (
                   <div className={styles.noResults}>
@@ -184,10 +205,20 @@ const Results = () => {
                       onClick={() => navigate('/details', { state: { ...item } })}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={e => { if (e.key === 'Enter') navigate('/details', { state: { ...item } }); }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter')
+                          navigate('/details', { state: { ...item } });
+                      }}
                     >
                       <div className={styles.imageWrapper}>
-                        <img src={item.campImages?.[0] || '/images/content/Camp_Image.png'} alt={item.campName} />
+                        <img
+                          src={
+                            Array.isArray(item.campImages) && item.campImages.length > 0
+                              ? item.campImages[0]
+                              : 'https://firebasestorage.googleapis.com/v0/b/campcare-react.firebasestorage.app/o/campImages%2FCamp_Image.png?alt=media&token=aec0e683-4681-4fba-95e5-145951685a60'
+                          }
+                          alt={item.campName}
+                        />
                         <span className={styles.price}>
                           {Number(item.campCost) === 0 ? 'Free' : `$${item.campCost}`}
                         </span>
@@ -203,23 +234,32 @@ const Results = () => {
                           <strong>Learn more</strong>
                         </p>
                         <div className={styles.meta}>
-                          <span>{item.campCity}, {item.campState} {item.campZip}</span>
+                          <span>
+                            {item.campCity}, {item.campState} {item.campZip}
+                          </span>
                           <span>
                             {(
                               item.campStart.toDate
                                 ? item.campStart.toDate()
                                 : item.campStart.seconds
-                                  ? new Date(item.campStart.seconds * 1000)
-                                  : new Date(item.campStart)
-                            ).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                ? new Date(item.campStart.seconds * 1000)
+                                : new Date(item.campStart)
+                            ).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                            })}
                             {' – '}
                             {(
                               item.campEnd.toDate
                                 ? item.campEnd.toDate()
                                 : item.campEnd.seconds
-                                  ? new Date(item.campEnd.seconds * 1000)
-                                  : new Date(item.campEnd)
-                            ).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                ? new Date(item.campEnd.seconds * 1000)
+                                : new Date(item.campEnd)
+                            ).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })}
                           </span>
                         </div>
                       </div>
@@ -227,12 +267,21 @@ const Results = () => {
                   ))
                 )}
               </div>
+
               <div className={styles.pagination}>
-                <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                >
                   Previous
                 </button>
-                <span>Page {currentPage} of {pageCount}</span>
-                <button onClick={() => setCurrentPage(p => Math.min(p + 1, pageCount))} disabled={currentPage === pageCount}>
+                <span>
+                  Page {currentPage} of {pageCount}
+                </span>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(p + 1, pageCount))}
+                  disabled={currentPage === pageCount}
+                >
                   Next
                 </button>
               </div>
@@ -240,6 +289,7 @@ const Results = () => {
           </div>
         </div>
       </section>
+
       <Footer />
     </>
   );

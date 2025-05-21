@@ -185,14 +185,18 @@ const icons = {
 
 
 
+const viewBoxes = {
+  faSliders: "0 0 512 512",
+};
+
 const Icon = ({
     name,
     size = 16,
     fill = "currentColor",
     className,
-    viewBox = "0 0 16 16",
     ...props
 }) => {
+    const viewBox = viewBoxes[name] || "0 0 16 16";
     return (
         <svg
             className={cn(className)}
@@ -202,7 +206,7 @@ const Icon = ({
             fill={fill}
             {...props}
         >
-            <path d={icons[name]}></path>
+            <path d={icons[name]} />
         </svg>
     );
 };
