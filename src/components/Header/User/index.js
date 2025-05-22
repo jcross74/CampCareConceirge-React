@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import cn from "classnames";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -6,6 +6,8 @@ import styles from "./User.module.sass";
 import Icon from "../../Icon";
 import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
+import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const items = [
     {
@@ -44,6 +46,61 @@ const User = ({ className }) => {
     const [visible, setVisible] = useState(false);
     const { pathname } = useLocation();
     const navigate = useNavigate();
+    const [avatarUrl, setAvatarUrl] = useState(() => {
+        return localStorage.getItem("user_avatar_url") || "/images/avatar-menu.png";
+    });
+
+    useEffect(() => {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (!user) {
+            setAvatarUrl("/images/avatar-menu.png");
+            localStorage.removeItem("user_avatar_url");
+            return;
+        }
+        const db = getFirestore();
+        const userDocRef = doc(db, "users", user.uid);
+
+        const storage = getStorage();
+
+        const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (data.avatar) {
+                    // Check if avatar is a full URL or storage path
+                    if (typeof data.avatar === "string") {
+                        if (data.avatar.startsWith("http://") || data.avatar.startsWith("https://")) {
+                            setAvatarUrl(data.avatar);
+                            localStorage.setItem("user_avatar_url", data.avatar);
+                        } else {
+                            // Assume it's a storage path
+                            const storageRef = ref(storage, data.avatar);
+                            getDownloadURL(storageRef)
+                                .then((url) => {
+                                    setAvatarUrl(url);
+                                    localStorage.setItem("user_avatar_url", url);
+                                })
+                                .catch(() => {
+                                    setAvatarUrl("/images/avatar-menu.png");
+                                    localStorage.removeItem("user_avatar_url");
+                                });
+                        }
+                    } else {
+                        setAvatarUrl("/images/avatar-menu.png");
+                        localStorage.removeItem("user_avatar_url");
+                    }
+                } else {
+                    setAvatarUrl("/images/avatar-menu.png");
+                    localStorage.removeItem("user_avatar_url");
+                }
+            } else {
+                setAvatarUrl("/images/avatar-menu.png");
+                localStorage.removeItem("user_avatar_url");
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <OutsideClickHandler onOutsideClick={() => setVisible(false)}>
@@ -56,7 +113,7 @@ const User = ({ className }) => {
                     className={styles.head}
                     onClick={() => setVisible(!visible)}
                 >
-                    <img src="/images/avatar-menu.png" alt="Avatar" />
+                    <img src={avatarUrl} alt="Avatar" />
                 </button>
                 <div className={styles.body}>
                     {items.map((item, index) => (
@@ -87,6 +144,7 @@ const User = ({ className }) => {
                                                 .then(() => {
                                                     Cookies.remove("UserUID");
                                                     Cookies.remove("role");
+                                                    localStorage.removeItem("user_avatar_url");
                                                     navigate("/");
                                                 })
                                                 .catch((error) => {

@@ -5,6 +5,7 @@ import OutsideClickHandler from "react-outside-click-handler";
 import styles from "./User.module.sass";
 import Icon from "../../Icon";
 import { getAuth, signOut } from "firebase/auth";
+import { doc, onSnapshot, getFirestore } from "firebase/firestore";
 
 const User = ({ className }) => {
   const getCookie = (name) => {
@@ -19,13 +20,52 @@ const User = ({ className }) => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const auth = getAuth();
+  const db = getFirestore();
+
+  const [avatarUrl, setAvatarUrl] = useState(
+    localStorage.getItem("user_avatar_url") || "/images/avatar-menu.png"
+  );
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribeAuth = auth.onAuthStateChanged((user) => {
       setIsAuthenticated(!!user);
     });
-    return () => unsubscribe();
+    return () => unsubscribeAuth();
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setAvatarUrl("/images/avatar-menu.png");
+      localStorage.removeItem("user_avatar_url");
+      return;
+    }
+
+    const userUID = auth.currentUser?.uid;
+    if (!userUID) {
+      setAvatarUrl("/images/avatar-menu.png");
+      localStorage.removeItem("user_avatar_url");
+      return;
+    }
+
+    const userDocRef = doc(db, "users", userUID);
+    const unsubscribeSnapshot = onSnapshot(userDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.avatar) {
+          setAvatarUrl(data.avatar);
+          localStorage.setItem("user_avatar_url", data.avatar);
+        } else {
+          setAvatarUrl("/images/avatar-menu.png");
+          localStorage.removeItem("user_avatar_url");
+        }
+      } else {
+        setAvatarUrl("/images/avatar-menu.png");
+        localStorage.removeItem("user_avatar_url");
+      }
+    });
+
+    return () => unsubscribeSnapshot();
+  }, [isAuthenticated, auth.currentUser, db]);
 
   const role = getCookie("role");
 
@@ -58,6 +98,7 @@ const User = ({ className }) => {
         // Clear cookies before redirecting.
         document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
         document.cookie = "userUID=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        localStorage.removeItem("user_avatar_url");
         // Sign-out successful. Redirect to the site's root.
         window.location.href = "/";
       })
@@ -74,7 +115,7 @@ const User = ({ className }) => {
         })}
       >
         <button className={styles.head} onClick={() => setVisible(!visible)}>
-          <img src="/images/avatar-menu.png" alt="Avatar" />
+          <img src={avatarUrl} alt="Avatar" />
         </button>
         <div className={styles.body}>
           {items.map((item, index) => (

@@ -6,7 +6,21 @@ import Dropdown from "../../components/Dropdown";
 import ProfileInformation from "./ProfileInformation";
 import Login from "./Login";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 import Cookies from "js-cookie";
 
 const Settings = () => {
@@ -16,16 +30,10 @@ const Settings = () => {
       action: () =>
         scrollToProfile.current.scrollIntoView({ behavior: "smooth" }),
     },
-    {
-      title: "Login",
-      action: () =>
-        scrollToLogin.current.scrollIntoView({ behavior: "smooth" }),
-    },
-    
-   
+    // Add other tabs as needed, e.g. Password, etc.
   ];
   const options = [];
-  navigation.map((x) => options.push(x.title));
+  navigation.forEach((x) => options.push(x.title));
   const [activeTab, setActiveTab] = useState(options[0]);
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -36,10 +44,13 @@ const Settings = () => {
 
   const [userData, setUserData] = useState(null);
 
-  // Add state for first name, last name, and email
+  // User info states
   const [nameFirst, setNameFirst] = useState("");
   const [nameLast, setNameLast] = useState("");
   const [email, setEmail] = useState("");
+
+  // New: Cache selected avatar file here
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,29 +76,65 @@ const Settings = () => {
     setActiveIndex(index);
     x.action();
   };
-  // Save handler
+
+  // New: handle file selected from ProfileInformation
+  const handleFileSelect = (file) => {
+    setSelectedFile(file);
+  };
+
+  // Save handler including avatar upload
   const handleSave = async () => {
     const db = getFirestore();
     const userUID = Cookies.get("userUID");
     if (!userUID) return;
 
-    const usersRef = collection(db, "users");
-    const q = query(usersRef, where("authID", "==", userUID));
-    const querySnapshot = await getDocs(q);
+    try {
+      // Upload avatar if new file selected
+      if (selectedFile) {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (!user) throw new Error("User not authenticated");
 
-    if (!querySnapshot.empty) {
-      const userDoc = querySnapshot.docs[0];
-      const docRef = userDoc.ref;
-      const updates = {};
-      if (nameFirst !== userDoc.data().nameFirst) updates.nameFirst = nameFirst;
-      if (nameLast !== userDoc.data().nameLast) updates.nameLast = nameLast;
+        const storage = getStorage();
+        const ext = selectedFile.name.split(".").pop().toLowerCase();
+        const fileName = `${user.uid}.${ext}`;
+        const storageRef = ref(storage, `userImages/${fileName}`);
 
-      if (Object.keys(updates).length > 0) {
-        await updateDoc(docRef, updates);
-        console.log("Changes have been saved.");
+        await uploadBytes(storageRef, selectedFile);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        const userDocRef = doc(db, "users", user.uid);
+        await updateDoc(userDocRef, { avatar: downloadURL });
+
+        // Refresh user data with new avatar URL
+        setUserData((prev) => ({ ...prev, avatar: downloadURL }));
+        setSelectedFile(null);
       }
+
+      // Update other fields if changed
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("authID", "==", userUID));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const docRef = userDoc.ref;
+        const updates = {};
+        if (nameFirst !== userDoc.data().nameFirst) updates.nameFirst = nameFirst;
+        if (nameLast !== userDoc.data().nameLast) updates.nameLast = nameLast;
+
+        if (Object.keys(updates).length > 0) {
+          await updateDoc(docRef, updates);
+          console.log("Changes have been saved.");
+        }
+      }
+      alert("Profile updated successfully.");
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("Failed to save profile. Please try again.");
     }
   };
+
   return (
     <>
       <div className={styles.settings}>
@@ -126,34 +173,14 @@ const Settings = () => {
                 email={email}
                 setNameFirst={setNameFirst}
                 setNameLast={setNameLast}
+                onFileSelect={handleFileSelect} // Pass callback here
               />
             </div>
-            <div
-              className={cn(styles.item, {
-                [styles.active]: activeTab === options[1],
-              })}
-            >
-              <div className={styles.anchor} ref={scrollToLogin}></div>
-              <Login userData={userData} />
-            </div>
-            <div
-              className={cn(styles.item, {
-                [styles.active]: activeTab === options[2],
-              })}
-            >
-             
-              
-            </div>
-            <div
-              className={cn(styles.item, {
-                [styles.active]: activeTab === options[3],
-              })}
-            >
-              
-              
-            </div>
+            {/* Other sections as needed */}
           </div>
-          <button className={cn("button", styles.button)} onClick={handleSave}>Save</button>
+          <button className={cn("button", styles.button)} onClick={handleSave}>
+            Save
+          </button>
         </div>
       </div>
       <TooltipGlodal />
