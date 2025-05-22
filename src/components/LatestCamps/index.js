@@ -40,6 +40,7 @@ const LatestCamps = ({ className, views = Infinity }) => {
               ? data.campImage[0]
               : "/images/content/Camp_Image@2x.png",
             active: data.campStatus === "Approved",
+            // Add any additional fields you'd like to pass to the modal here
           };
         });
         setCamps(fetchedCamps);
@@ -67,15 +68,7 @@ const LatestCamps = ({ className, views = Infinity }) => {
             {camps.map((x, index) => {
               // Prepare campData for modal
               const campData = {
-                id: x.id,
-                campName: x.campName,
-                campStatus: x.campStatus,
-                campCity: x.campCity,
-                campZip: x.campZip,
-                campDescription: x.campDescription,
-                campImage: x.campImage && x.campImage.length > 0
-                  ? x.campImage
-                  : "/images/content/Camp_Image.png",
+                ...x, // spread all camp fields
               };
               return (
                 <div
@@ -155,7 +148,12 @@ const LatestCamps = ({ className, views = Infinity }) => {
                 className={styles.editButton}
                 onClick={() => {
                   setModalOpen(false);
-                  navigate(`/admin/camps/edit/${selectedCamp.id}`, { state: selectedCamp });
+                  navigate(`/admin/camps/edit`, { 
+                    state: { 
+                      campID: selectedCamp.id, 
+                      campData: selectedCamp 
+                    } 
+                  });
                 }}
               >
                 Edit Camp
