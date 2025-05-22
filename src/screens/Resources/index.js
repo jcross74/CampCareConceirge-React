@@ -72,6 +72,102 @@ const Resources = () => {
           Yes! Our search tool allows you to filter by interests, activities, location by zip code, and special themes to ensure you find the perfect fit.
         </AccordionDetails>
       </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Are there camps for specific age groups or skill levels?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Absolutely. You can filter camps by age, skill level, and experience to match your child’s needs.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Do you list both day camps and overnight camps?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Yes! Our search tool allows you to filter by interests, activities, location by zip code, and special themes to ensure you find the perfect fit.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Can I search for camps based on my child’s interests?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          No, right now we are focused on local day only campus, but we plan on expanding that to overnight and away camps for V2.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Are the camps on your site verified?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          We prioritize reliable, trusted camps, but we always recommend doing your own research before enrolling.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Can I save my favorite camps for later?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Currently, we are working on that feature which will allow you to save and compare camps……stay tuned for more soon!
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">How do I contact a camp directly?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Each camp listing includes all necessary contact information so you can reach out directly with any questions or to enroll/register.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Are there camps for children with special needs or specific support requirements?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Yes, you can find camps that specialize in accommodating various needs and support levels.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography component="span">Can I suggest a camp to be added to the directory?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          Absolutely! We’re always looking to expand our listings. Just reach out to us with the camp’s details.
+        </AccordionDetails>
+      </Accordion>
   
           </div>
         </section>
