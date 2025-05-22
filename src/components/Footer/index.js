@@ -88,7 +88,7 @@ export default function Footer() {
               Connecting Families to Camps & Activities
             </Heading>
             <div className={cn("subheading-small", styles.email)}>
-              info@campcareconceirge.com
+              <a className={styles.link}href="mailto:info@campcareconceirge.com">info@campcareconceirge.com</a>
             </div>
           </div>
         </div>
