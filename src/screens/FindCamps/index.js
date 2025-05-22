@@ -55,10 +55,10 @@ const FindCamps = () => {
             <section className={styles.findCampsSection}>
              <section className={styles.categoriesSection}>
               <div className={styles.campContent}>
-              <h2>Find the Perfect Camp for Every Interest</h2>
-              <p>Looking for a fun, safe, and enriching camp experience for your child? You’re in the right place. At Camp Care Concierge, we make it easy for parents to explore and discover a wide variety of summer camps and year-round programs tailored to every child’s passion and personality.</p>
+              <h2>Find Your Perfect Camp or Activity</h2>
+              <p>Looking for a fun, safe, and enriching camp experience for your child? You’re in the right place. At Camp Care Concierge, we make it easy for parents to explore and discover a wide variety of seasonal camps and year-round activities tailored to your child’s needs, passions and personality.</p>
               <p>Whether your child is into sports, STEM and educational activities, nature exploration, creative arts, virtual gaming, or even cooking and culinary fun, our platform helps you quickly find the perfect fit. Search by category, age group, location, or schedule—everything you need is at your fingertips.</p>
-              <p>With hundreds of curated listings, trusted reviews, and helpful filters, finding the right camp has never been easier. Start exploring today and give your child a summer (or season) full of growth, friendship, and unforgettable memories.</p>
+              <p>With hundreds of curated listings, trusted reviews (COMING SOON!), and relevant search filters, finding the right camp or activity has never been easier. Start exploring today and give your child an experience filled with growth, lasting friendships, and unforgettable memories.</p>
               </div>
               <div className={styles.grid}>
                 {[
