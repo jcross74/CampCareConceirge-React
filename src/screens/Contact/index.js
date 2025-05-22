@@ -24,7 +24,7 @@ const Contact = () => {
         };
 
         const templateParams = {
-            to_email: "jcross74@me.com",
+            to_email: "info@campcareconcierge.com",
             subject: "Contact Form Submission from Camp Care Site",
             ...data,
         };
@@ -55,11 +55,11 @@ const Contact = () => {
         <div className={styles.container}>
             <section className={styles.contactSection}>
               <div className={styles.intro}>
-                <h2>Thank you for your interest in Camp Care Concierge.</h2>
+                <h2>Thank you for your interest in Camp Care Concierge!</h2>
                 <p>
-                  At CampCare, our team is dedicated to making your experience seamless—from discovering top-rated camps to getting support every step of the way. Whether you’re a parent looking for the perfect program or a provider interested in listing your camp, we’d love to hear from you.
+                  Our team is here to make your experience easy and enjoyable—from discovering top-rated camps and activities to receiving support every step of the way. Whether you’re a parent or guardian searching for the perfect program, or a provider interested in listing your camp, we’d love to connect.
                 </p>
-                <p>Please provide us some details and one of our representatives will be sure to get back to you as soon as possible.</p>
+                <p>Please share as many details as possible, and a member of our team will be in touch with you shortly.</p>
               </div>
               <form className={styles.form} onSubmit={handleSubmit}>
                 <h3>Contact Form</h3>
