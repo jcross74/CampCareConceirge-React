@@ -1,5 +1,3 @@
-// This file is the Camps List with the checkboxes next the camp listings
-
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import styles from "./Camps.module.sass";
@@ -12,26 +10,44 @@ import { fetchCampData } from "../../../mocks/camp";
 
 const Camps = () => {
   const navigation = ["Camp"];
-
   const [activeTab, setActiveTab] = useState(navigation[0]);
   const [search, setSearch] = useState("");
+  const [allCampItems, setAllCampItems] = useState([]);
   const [campItems, setCampItems] = useState([]);
 
   useEffect(() => {
     const loadCamp = async () => {
       const cachedData = Cookies.get("campData");
       if (cachedData) {
-        setCampItems(JSON.parse(cachedData));
+        const parsedData = JSON.parse(cachedData);
+        setAllCampItems(parsedData);
+        setCampItems(parsedData);
         return;
       }
       const data = await fetchCampData();
+      setAllCampItems(data);
       setCampItems(data);
     };
     loadCamp();
   }, []);
 
+  useEffect(() => {
+    if (!search) {
+      setCampItems(allCampItems);
+      return;
+    }
+    const filtered = allCampItems.filter((item) => {
+      return (
+        typeof item.campName === "string" &&
+        item.campName.toLowerCase().includes(search.toLowerCase())
+      );
+    });
+    setCampItems(filtered);
+  }, [search, allCampItems]);
+
   const handleSubmit = (e) => {
-    alert();
+    e.preventDefault();
+    // Additional submit logic can be added here if needed
   };
 
   return (
@@ -41,18 +57,18 @@ const Camps = () => {
       classTitle={cn("title-red", styles.title)}
       classCardHead={styles.head}
       head={
-        <>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <Form
-            className={styles.form}
+            className={styles.search}
             value={search}
             setValue={setSearch}
-            onSubmit={() => handleSubmit()}
             placeholder="Search camps"
             type="text"
             name="search"
-            icon="search"
           />
-        </>
+          {/* Optional submit button */}
+          {/* <button type="submit">Search</button> */}
+        </form>
       }
     >
       <div className={styles.products}>
