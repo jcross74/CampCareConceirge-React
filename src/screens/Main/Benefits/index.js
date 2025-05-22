@@ -11,7 +11,7 @@ const Benefits = () => {
         <div className={styles.benefits_content}>
           <h2 className={styles.title}>Benefits of choosing Camp Care Concierge</h2>
           <p className={styles.description}>
-            Our search tool is designed by parents, for parents—because we understand what matters most when choosing the right camp or activity. We’re committed to providing you with the information you need, exactly when you need it, so you can make the best decisions for your child with ease and confidence.
+            Our search tool is designed by parents, for parents, because we understand what matters most when choosing the right camp or activity. We’re committed to providing you with the information you need, exactly when you need it, so that you can make the best decisions for your child easily and confidently.
           </p>
           <ul className={styles.list}>
             <li><Icon name="check" /> Built by parents</li>

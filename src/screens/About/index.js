@@ -42,14 +42,13 @@ const About = () => {
           <div className={styles.item}>
             <h4>Reliable</h4>
             <p>
-              Our search feature delivers precise, up-to-date, and local standardized  information, empowering you to make confident decisions on camps and actitives.
+              Our search feature delivers precise, up-to-date, and local standardized information, empowering you to confidently decide on camps and activities.
             </p>
           </div>
           <div className={styles.item}>
             <h4>Time-Saving</h4>
             <p>
-              Our platform streamlines your search process—filter, compare, and
-              find the right fit in just a few clicks.
+              Our platform simplifies your search—filter, compare, and find the right fit in just a few clicks.
             </p>
           </div>
           <div className={styles.item}>
