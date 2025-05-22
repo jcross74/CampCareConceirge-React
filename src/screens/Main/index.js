@@ -130,7 +130,7 @@ const Main = () => {
       <div className={styles.shop}>
         <div className={styles.background}>
           <div className={styles.overlayText}>
-            <h1>Discover North Virginia’s Best Camps & Activities for Kids</h1>
+            <h1>Discover Northern Virginia’s Best Camps & Activities for Kids</h1>
           </div>
         </div>
 
