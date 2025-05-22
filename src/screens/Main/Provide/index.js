@@ -7,6 +7,8 @@ import Icon from "../../../components/Icon";
 const Provide = () => {
     return (
         <div className={styles.section}>
+            <div className={styles.adContainer}>
+                </div>
             <div className={styles.container}>
                 <div className={styles.provide_image}>
                     <img className={styles.fullWidth}

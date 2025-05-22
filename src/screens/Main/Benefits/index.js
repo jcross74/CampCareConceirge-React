@@ -27,6 +27,9 @@ const Benefits = () => {
           />
         </div>
       </div>
+      <div className={styles.adContainerThin}>
+      </div>
+      
     </div>
   );
 };

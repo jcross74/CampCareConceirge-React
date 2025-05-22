@@ -21,6 +21,7 @@ const Partner = () => {
             alt="Exploring the outdoors"
           />
         </div>
+        <div className={styles.adContainer}></div>
       </div>
     </div>
   );
