@@ -4,8 +4,8 @@ import cn from "classnames";
 
 export default function Logo({ className }) {
   return (
-    <Link href="/" className={cn(styles.logo, className)}>
-      Camp Care Conceirge™
+    <Link className={cn(styles.logo)}>
+      Camp Care Concierge™
     </Link>
   );
 }

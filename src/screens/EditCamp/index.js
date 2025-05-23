@@ -11,8 +11,8 @@ import CategoryAndAttibutes from "./CategoryAndAttibutes";
 import Discussion from "./Discussion";
 import Preview from "./Preview";
 import Panel from "./Panel";
-import { getFirestore, collection, addDoc, Timestamp, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getFirestore, doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from "../../firebase";
 
 const EditCamp = () => {
@@ -49,6 +49,10 @@ const EditCamp = () => {
   const [campFormat, setCampFormat] = useState("Select");
   const [campModified, setCampModified] = useState(null);
 
+  // Images and files
+  const [campImages, setCampImages] = useState([]);        // Existing image URLs from Firestore
+  const [selectedFiles, setSelectedFiles] = useState([]);  // Newly selected image Files
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,14 +62,11 @@ const EditCamp = () => {
         return;
       }
 
-      console.log("Passed in campID:", campID);
-
       const db = getFirestore(app);
       const docRef = doc(db, "camps", campID);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        console.log("Number of records returned: 1");
         const data = docSnap.data();
         setCampName(data.campName || "");
         setCampProvider(data.campProvider || "Select");
@@ -95,6 +96,7 @@ const EditCamp = () => {
         setCampCost(data.campCost || 0);
         setCampFormat(data.campFormat || "Select");
         setCampModified(data.campModified || null);
+        setCampImages(data.campImages || []); // <-- Existing image URLs
       } else {
         console.log("No matching documents.");
       }
@@ -107,7 +109,23 @@ const EditCamp = () => {
     if (!campID) return;
     try {
       const db = getFirestore(app);
+      const storage = getStorage(app);
       const docRef = doc(db, "camps", campID);
+
+      // --- UPLOAD any new images in selectedFiles and merge with campImages ---
+      let newImageUrls = [];
+      if (selectedFiles.length > 0) {
+        for (const file of selectedFiles) {
+          const storageRef = ref(storage, `campImages/${Date.now()}_${file.name}`);
+          await uploadBytes(storageRef, file);
+          const downloadUrl = await getDownloadURL(storageRef);
+          newImageUrls.push(downloadUrl);
+        }
+      }
+      // Merge previous images with new uploads
+      const imagesArray = [...campImages, ...newImageUrls];
+
+      // Update the document
       const updateFields = {
         campName,
         campProvider,
@@ -128,13 +146,20 @@ const EditCamp = () => {
         campStatus,
         campCost: Number(campCost),
         campFormat,
-        campModified: Timestamp.now()
+        campModified: Timestamp.now(),
+        campImages: imagesArray // <-- All image URLs
       };
       await updateDoc(docRef, updateFields);
-      console.log("Update recorded");
+
+      // Clear new files (if you want to reset upload state)
+      setSelectedFiles([]);
+      setCampImages(imagesArray);
+
+      alert("Camp updated successfully!");
       navigate("/admin/camps/dashboard");
     } catch (error) {
       console.error("Error updating camp:", error);
+      alert("Error updating camp. Please try again.");
     }
   };
 
@@ -188,6 +213,10 @@ const EditCamp = () => {
             setCampState={setCampState}
             campZip={campZip}
             setCampZip={setCampZip}
+            campImages={campImages}
+            setCampImages={setCampImages}
+            selectedFiles={selectedFiles}
+            setSelectedFiles={setSelectedFiles}
           />
           <CategoryAndAttibutes
             className={styles.card}
@@ -196,9 +225,7 @@ const EditCamp = () => {
             campFormat={campFormat}
             setCampFormat={setCampFormat}
           />
-          {/* Optionally include ProductFiles if needed */}
         </div>
-        
       </div>
       <Panel
         setVisiblePreview={setVisiblePreview}

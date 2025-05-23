@@ -30,3 +30,46 @@
         line-height: (16/12)
         font-weight: 700
         color: $n4
+
+.previewThumbnails
+  display: flex
+  flex-wrap: wrap
+  gap: 12px
+
+.thumbnailItem
+  position: relative
+  width: 64px
+  height: 64px
+  display: flex
+  align-items: center
+  justify-content: center
+
+.previewThumbnail
+  width: 64px
+  height: 64px
+  object-fit: cover
+  border-radius: 7px
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08)
+
+.removeButton
+  position: absolute
+  top: 4px
+  right: 4px
+  z-index: 2
+  width: 22px
+  height: 22px
+  border: none
+  background: rgba(255,255,255,0.86)
+  color: #e23
+  font-size: 18px
+  font-weight: bold
+  border-radius: 50%
+  cursor: pointer
+  display: flex
+  align-items: center
+  justify-content: center
+  box-shadow: 0 1px 4px rgba(0,0,0,0.11)
+  transition: background 0.2s
+  &:hover
+    background: #fff
+    color: #b10

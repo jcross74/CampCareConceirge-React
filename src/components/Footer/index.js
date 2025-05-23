@@ -10,7 +10,7 @@ const links = [
   {
     id: 1,
     title: "Home",
-    url: "#",
+    url: "/",
   },
   {
     id: 2,
@@ -25,12 +25,12 @@ const links = [
   {
     id: 4,
     title: "Contact Us",
-    url: "#",
+    url: "/contact",
   },
   {
     id: 5,
-    title: "Camp Categories",
-    url: "#",
+    title: "Find Camps",
+    url: "/find-camps",
   },
   {
     id: 6,
@@ -45,7 +45,7 @@ const links = [
   {
     id: 8,
     title: "Parent Resources",
-    url: "#",
+    url: "/resources",
   },
 ];
 
@@ -88,7 +88,7 @@ export default function Footer() {
               Connecting Families to Camps & Activities
             </Heading>
             <div className={cn("subheading-small", styles.email)}>
-              <a className={styles.link}href="mailto:info@campcareconceirge.com">info@campcareconceirge.com</a>
+              <a className={styles.link}href="mailto:info@campcareconcierge.com">info@campcareconcierge.com</a>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function Footer() {
             </div>
 
             <div className={cn("paragraph-small", styles.copyright)}>
-              © 2025 Camp Care Conceirge. All rights reserved.
+              © 2025 Camp Care Concierge. All rights reserved.
             </div>
           </div>
 
