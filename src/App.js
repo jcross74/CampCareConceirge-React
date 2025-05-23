@@ -39,6 +39,7 @@ import PageList from "./screens/PageList";
 import UserList from "./screens/UsersList";
 import TagsList from "./screens/Data/Tags";
 import SeasonsList from "./screens/Data/Seasons";
+import FormatsList from "./screens/Data/Format";
 import Navigation from "./components/Navigation";
 import MainNavigation from "./components/MainNavigation";
 
@@ -163,6 +164,15 @@ function App() {
             element={
               <Page title="Seasons">
                 <SeasonsList />
+              </Page>
+            }
+          />
+
+          <Route
+            path="/admin/format"
+            element={
+              <Page title="Formats">
+                <FormatsList />
               </Page>
             }
           />

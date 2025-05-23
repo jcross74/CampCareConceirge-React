@@ -6,7 +6,7 @@ import firebaseConfig from "../../src/firebase"; // adjust path if needed
 const app = initializeApp(firebaseConfig); // ✅ Correct
 const db = getFirestore(app);
 
-export const fetchSeason = async () => {
+export const fetchFormats = async () => {
   const cachedFormat = Cookies.get("cachedFormat");
   if (cachedFormat) {
     return JSON.parse(cachedFormat);
@@ -24,7 +24,7 @@ export const fetchSeason = async () => {
       });
     });
   
+    formatList.sort((a, b) => a.formatName.localeCompare(b.formatName));
     Cookies.set("cachedFormat", JSON.stringify(formatList), { expires: 1 / 24 });
     return formatList;
   };
-  

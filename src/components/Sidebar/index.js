@@ -59,10 +59,6 @@ const Sidebar = ({ className, onClose }) => {
                     counter: pendingCount,
                     colorCounter: "#FFBC99",
                 },
-                /* {
-                    title: "Approved",
-                    url: "/admin/camps/approved",
-                }, */
             ],
         },
         {
@@ -82,6 +78,7 @@ const Sidebar = ({ className, onClose }) => {
             slug: "providers",
             icon: "faProviders",
             viewBox: "0 0 512 512",
+            add: true,
             dropdown: [
                 {
                     title: "Overview",
