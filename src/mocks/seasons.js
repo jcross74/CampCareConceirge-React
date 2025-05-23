@@ -6,7 +6,7 @@ import firebaseConfig from "../../src/firebase"; // adjust path if needed
 const app = initializeApp(firebaseConfig); // ✅ Correct
 const db = getFirestore(app);
 
-export const fetchSeason = async () => {
+export const fetchSeasons = async () => {
   const cachedSeason = Cookies.get("cachedSeason");
   if (cachedSeason) {
     return JSON.parse(cachedSeason);

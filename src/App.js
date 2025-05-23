@@ -38,7 +38,7 @@ import Shop from "./screens/Shop";
 import PageList from "./screens/PageList";
 import UserList from "./screens/UsersList";
 import TagsList from "./screens/Data/Tags";
-
+import SeasonsList from "./screens/Data/Seasons";
 import Navigation from "./components/Navigation";
 import MainNavigation from "./components/MainNavigation";
 
@@ -154,6 +154,15 @@ function App() {
             element={
               <Page title="Tags">
                 <TagsList />
+              </Page>
+            }
+          />
+
+          <Route
+            path="/admin/seasons"
+            element={
+              <Page title="Seasons">
+                <SeasonsList />
               </Page>
             }
           />
