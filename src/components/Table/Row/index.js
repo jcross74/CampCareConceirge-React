@@ -11,7 +11,7 @@ import Schedule from "../../Schedule";
 import Control from "./Control";
 import { useNavigate } from "react-router-dom";
 
-const Row = ({ item }) => {
+const Row = ({ item, value, onChange }) => {
 
     const navigate = useNavigate();
     const [startDate, setStartDate] = useState(new Date());
@@ -22,7 +22,6 @@ const Row = ({ item }) => {
 
     const [visibleModalProduct, setVisibleModalProduct] = useState(false);
     const [visibleModalSchedule, setVisibleModalSchedule] = useState(false);
-    const [checked, setChecked] = useState(false);
 
     const actions = [
         {
@@ -48,8 +47,8 @@ const Row = ({ item }) => {
                 <div className={styles.col}>
                     <Checkbox
                         className={styles.checkbox}
-                        value={checked}
-                        onChange={() => setChecked(!checked)}
+                        value={value}
+                        onChange={onChange}
                     />
                 </div>
                 <div className={styles.col}>
@@ -61,9 +60,17 @@ const Row = ({ item }) => {
                     >
                         <div className={styles.preview}>
                             <img
-                                srcSet={`${item.image2x} 2x`}
-                                src={item.image}
-                                alt="Product"
+                                src={
+                                    item.campImages && item.campImages.length > 0
+                                        ? item.campImages[0]
+                                        : "../../images/content/Camp_Image.png"
+                                }
+                                srcSet={
+                                    item.campImages && item.campImages.length > 0
+                                        ? `${item.campImages[0]} 2x`
+                                        : "../../images/content/Camp_Image@2x.png 2x"
+                                }
+                                alt="Camp Preview"
                             />
                         </div>
                         <div className={styles.details}>
@@ -72,15 +79,6 @@ const Row = ({ item }) => {
                             <div className={styles.date}>
                                 <Icon name="clock" size="20" /> {item.date}
                             </div>
-                            {item.price > 0 ? (
-                                <div className={styles.price}>
-                                    ${item.price}
-                                </div>
-                            ) : (
-                                <div className={styles.empty}>
-                                    ${item.price}
-                                </div>
-                            )}
                         </div>
                     </div>
                     <Actions
@@ -90,15 +88,16 @@ const Row = ({ item }) => {
                     />
                 </div>
                 <div className={styles.col}>
-                    {item.price > 0 ? (
-                        <div className={styles.price}>${item.price}</div>
+                    {item.campCost && item.campCost > 0 ? (
+                        <div className={styles.price}>${item.campCost}</div>
                     ) : (
-                        <div className={styles.empty}>${item.price}</div>
+                        <div className={styles.empty}>$0</div>
                     )}
                 </div>
                 <div className={styles.col}>
-                    {item.date}
-                    
+                    {item.campModified && item.campModified.toDate
+                        ? item.campModified.toDate().toLocaleDateString()
+                        : ""}
                 </div>
             </div>
             <ModalProduct

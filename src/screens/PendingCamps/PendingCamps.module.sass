@@ -79,3 +79,44 @@
         .loader
             transform: scale(.8)
             margin: 0 18px 0 8px
+
+.pagination
+    display: flex
+    justify-content: center
+    margin-top: 16px
+
+    button
+        margin: 0 8px
+        padding: 16px 24px
+        +caption1
+        background: none
+        border: 1px solid $n3
+        border-radius: 4px
+        cursor: pointer
+        &:disabled
+            opacity: 0.5
+            cursor: default
+
+    span
+        font-size: 1em
+        color: $n4
+        margin: 0 8px
+        align-content: center
+
+// Add at the end or in a relevant section
+.approvalModalButton
+    margin-top: 24px
+    padding: 12px 32px
+    font-size: 1.125em
+    font-weight: 600
+    background: red
+    color: #fff
+    border: none
+    border-radius: 6px
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08)
+    cursor: pointer
+    transition: background 0.2s, box-shadow 0.2s
+
+    &:hover
+        background: darken(red, 8%)
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12)

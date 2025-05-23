@@ -3,7 +3,7 @@ import cn from "classnames";
 import styles from "./Panel.module.sass";
 import Icon from "../../../components/Icon";
 
-const Panel = () => {
+const Panel = ({ onApprove, selectedCount }) => {
   return (
     <div className={cn("panel", styles.panel)}>
       <div className={styles.info}>
@@ -14,7 +14,13 @@ const Panel = () => {
           <span>Delete</span>
           <Icon name="trash" size="24" />
         </button>
-        <button className={cn("button", styles.button)}>Approve</button>
+        <button
+          className={cn("button", styles.button)}
+          onClick={onApprove}
+          disabled={selectedCount === 0}
+        >
+          Approve
+        </button>
       </div>
     </div>
   );

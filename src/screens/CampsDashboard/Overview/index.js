@@ -15,7 +15,8 @@ import {
   collection,
   getDocs,
   query,
-  where
+  where,
+  onSnapshot
 } from "firebase/firestore";
 import { app } from "../../../firebase";
 
@@ -26,85 +27,44 @@ const Overview = ({ className }) => {
   const [campsCount, setCampsCount] = useState(null);
   const [pendingCount, setPendingCount] = useState(null);
 
-  // Fetch total camps count from Firestore and cache for 24 hours.
+  // Real-time listener for total camps count with caching.
   useEffect(() => {
-    let isMounted = true;
-    const expiration = 2 * 60 * 1000; // 2 minutes in ms
-    const now = new Date().getTime();
+    const db = getFirestore(app);
+    const campsRef = collection(db, "camps");
 
-    const cachedCount = Cookies.get("campsCount");
-    const cachedTimestamp = Cookies.get("campsCountTimestamp");
+    const unsubscribe = onSnapshot(campsRef, (snapshot) => {
+      const count = snapshot.size;
+      const now = new Date().getTime();
+      Cookies.set("campsCount", count.toString(), { expires: 1 / 720 }); // 2 minutes = 1/720 days
+      Cookies.set("campsCountTimestamp", now.toString(), { expires: 1 / 720 });
+      setCampsCount(count);
+    }, (error) => {
+      console.error("Error fetching camps count:", error);
+    });
 
-    if (
-      cachedCount &&
-      cachedTimestamp &&
-      now - parseInt(cachedTimestamp, 10) < expiration
-    ) {
-      if (isMounted) {
-        setCampsCount(parseInt(cachedCount, 10));
-      }
-    } else {
-      const fetchCampsCount = async () => {
-        try {
-          const db = getFirestore(app);
-          const campsRef = collection(db, "camps");
-          const snapshot = await getDocs(campsRef);
-          const count = snapshot.size;
-          Cookies.set("campsCount", count.toString(), { expires: 1 / 720 }); // 2 minutes = 1/720 days
-          Cookies.set("campsCountTimestamp", now.toString(), { expires: 1 / 720 });
-          if (isMounted) {
-            setCampsCount(count);
-          }
-        } catch (error) {
-          console.error("Error fetching camps count:", error);
-        }
-      };
-      fetchCampsCount();
-    }
     return () => {
-      isMounted = false;
+      unsubscribe();
     };
   }, []);
 
-  // Fetch Pending Camps count from Firestore and cache for 2 minutes.
+  // Real-time listener for pending camps count with caching.
   useEffect(() => {
-    let isMounted = true;
-    const expiration = 2 * 60 * 1000; // 2 minutes in ms
-    const now = new Date().getTime();
+    const db = getFirestore(app);
+    const campsRef = collection(db, "camps");
+    const pendingQuery = query(campsRef, where("campStatus", "==", "Pending"));
 
-    const cachedPending = Cookies.get("pendingCamps");
-    const cachedPendingTimestamp = Cookies.get("pendingCampsTimestamp");
-
-    if (
-      cachedPending &&
-      cachedPendingTimestamp &&
-      now - parseInt(cachedPendingTimestamp, 10) < expiration
-    ) {
-      if (isMounted) {
-        setPendingCount(parseInt(cachedPending, 10));
-      }
-    } else {
-      const fetchPendingCount = async () => {
-        try {
-          const db = getFirestore(app);
-          const campsRef = collection(db, "camps");
-          const pendingQuery = query(campsRef, where("campStatus", "==", "Pending"));
-          const snapshot = await getDocs(pendingQuery);
-          const count = snapshot.size;
-          Cookies.set("pendingCamps", count.toString(), { expires: 1 / 720 }); // 2 minutes = 1/720 days
-          Cookies.set("pendingCampsTimestamp", now.toString(), { expires: 1 / 720 });
-          if (isMounted) {
-            setPendingCount(count);
-          }
-        } catch (error) {
-          console.error("Error fetching pending camps count:", error);
-        }
-      };
-      fetchPendingCount();
-    }
+    const unsubscribe = onSnapshot(pendingQuery, (snapshot) => {
+      const count = snapshot.size;
+      const now = new Date().getTime();
+      Cookies.set("pendingCamps", count.toString(), { expires: 1 / 720 }); // 2 minutes = 1/720 days
+      Cookies.set("pendingCampsTimestamp", now.toString(), { expires: 1 / 720 });
+      setPendingCount(count);
+    }, (error) => {
+      console.error("Error fetching pending camps count:", error);
+    });
 
     return () => {
-      isMounted = false;
+      unsubscribe();
     };
   }, []);
 

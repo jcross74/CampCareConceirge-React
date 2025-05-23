@@ -34,7 +34,6 @@ const Panel = ({ setVisiblePreview, setVisibleSchedule, campModified, onUpdate }
     await onUpdate();
     const updatedCampData = await fetchCampData();
     Cookies.set("campData", JSON.stringify(updatedCampData), { expires: 1 / 1440 });
-    window.location.reload();
   };
 
   return (
@@ -48,7 +47,7 @@ const Panel = ({ setVisiblePreview, setVisibleSchedule, campModified, onUpdate }
           <span>Delete</span>
           <Icon name="trash" size="24" />
         </button>
-        <button className={cn("button", styles.button)} onClick={handleClick}>
+        <button type="button" className={cn("button", styles.button)} onClick={handleClick}>
           Update now
         </button>
         

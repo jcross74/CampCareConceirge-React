@@ -7,7 +7,7 @@ import Theme from "../Theme";
 import Dropdown from "./Dropdown";
 import Help from "./Help";
 import Image from "../Image";
-import { getDocs, collection, query, where } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import Cookies from "js-cookie";
 
@@ -19,20 +19,17 @@ const Sidebar = ({ className, onClose }) => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        const fetchPendingCount = async () => {
-            const cached = Cookies.get("pendingCount");
-            if (cached) {
-                setPendingCount(cached);
-                return;
-            }
-            const q = query(collection(db, "camps"), where("campStatus", "==", "Pending"));
-            const snapshot = await getDocs(q);
+        const cached = Cookies.get("pendingCount");
+        if (cached) {
+            setPendingCount(cached);
+        }
+        const q = query(collection(db, "camps"), where("campStatus", "==", "Pending"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
             const count = snapshot.size.toString();
             setPendingCount(count);
             Cookies.set("pendingCount", count, { expires: 2 / 1440 }); // 2 minutes
-        };
-
-        fetchPendingCount();
+        });
+        return () => unsubscribe();
     }, []);
 
     const navigation = [

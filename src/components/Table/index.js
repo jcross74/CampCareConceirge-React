@@ -7,29 +7,13 @@ import Checkbox from "../Checkbox";
 import Loader from "../Loader";
 import Row from "./Row";
 
-const Table = ({ items, title }) => {
-  const [chooseAll, setСhooseAll] = useState(false);
-
-  const [selectedFilters, setSelectedFilters] = useState([]);
-
-  const handleChange = (id) => {
-    if (selectedFilters.includes(id)) {
-      setSelectedFilters(selectedFilters.filter((x) => x !== id));
-    } else {
-      setSelectedFilters((selectedFilters) => [...selectedFilters, id]);
-    }
-  };
-
+const Table = ({ items, title, selectedFilters, onChange }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.table}>
         <div className={styles.row}>
           <div className={styles.col}>
-            <Checkbox
-              className={styles.checkbox}
-              value={chooseAll}
-              onChange={() => setСhooseAll(!chooseAll)}
-            />
+            {/* "Select all" checkbox can be added here if you wish */}
           </div>
           <div className={styles.col}>Camp</div>
           <div className={styles.col}>Price</div>
@@ -38,16 +22,13 @@ const Table = ({ items, title }) => {
         {items.map((x, index) => (
           <Row
             item={x}
-            key={index}
-            index={index}
-            value={selectedFilters.includes(x.id)}
-            onChange={() => handleChange(x.id)}
+            key={x.campID || index}
+            value={selectedFilters.includes(x.campID)}      // Controlled checked state
+            onChange={() => onChange(x.campID)}             // Toggle for only this row
           />
         ))}
       </div>
-      <div className={styles.foot}>
-        
-      </div>
+      <div className={styles.foot}></div>
     </div>
   );
 };

@@ -22,6 +22,7 @@ const EditCamp = () => {
   // Visibility states
   const [visiblePreview, setVisiblePreview] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Schedule states (for the schedule modal, if used)
   const [startDate, setStartDate] = useState(new Date());
@@ -155,8 +156,8 @@ const EditCamp = () => {
       setSelectedFiles([]);
       setCampImages(imagesArray);
 
-      alert("Camp updated successfully!");
-      navigate("/admin/camps/dashboard");
+      setShowSuccessModal(true);
+      // navigate("/admin/camps/dashboard");
     } catch (error) {
       console.error("Error updating camp:", error);
       alert("Error updating camp. Please try again.");
@@ -165,6 +166,7 @@ const EditCamp = () => {
 
   return (
     <div>
+      <button type="button" onClick={() => navigate(-1)}>Back</button>
       <div className={styles.row}>
         <div className={styles.col}>
           {/* Child components with controlled inputs */}
@@ -233,6 +235,22 @@ const EditCamp = () => {
         campModified={campModified}
         onUpdate={handleUpdate}
       />
+      <Modal visible={showSuccessModal} onClose={() => setShowSuccessModal(false)}>
+        <div style={{ padding: "2rem", textAlign: "center" }}>
+          <h2>Camp Updated</h2>
+          <p>Camp updated successfully!</p>
+          <button
+            type="button"
+            onClick={() => {
+              setShowSuccessModal(false);
+              navigate("/admin/camps/dashboard");
+            }}
+            style={{ marginTop: "1rem" }}
+          >
+            OK
+          </button>
+        </div>
+      </Modal>
       <TooltipGlodal />
       <Modal visible={visibleModal} onClose={() => setVisibleModal(false)}>
         <Schedule
