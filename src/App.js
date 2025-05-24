@@ -21,6 +21,7 @@ import Comments from "./screens/Comments";
 import Scheduled from "./screens/Scheduled";
 import Customers from "./screens/Customers";
 import ProviderList from "./screens/ProviderList";
+import PendingProviders from "./screens/PendingProviders";
 import Promote from "./screens/Promote";
 import Notification from "./screens/Notification";
 import Settings from "./screens/Settings";
@@ -182,6 +183,15 @@ function App() {
             element={
               <Page title="Providers">
                 <ProviderList />
+              </Page>
+            }
+          />
+
+          <Route
+            path="/admin/providers/pending"
+            element={
+              <Page title="Pending Providers">
+                <PendingProviders />
               </Page>
             }
           />

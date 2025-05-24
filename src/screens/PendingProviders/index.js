@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase";
-import styles from "./ProviderList.module.sass";
+import styles from "./PendingProviders.module.sass";
 import cn from "classnames";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
 import Filters from "../../components/Filters";
-import Settings from "./Settings";
+
 import Table from "./Table";
 import Panel from "./Panel";
 import Details from "./Details";
+import { fetchProviders } from "../../mocks/providers";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const navigation = ["Active", "New"];
 
-const ProviderList = () => {
+const PendingProviders = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
@@ -35,7 +36,7 @@ const ProviderList = () => {
     <>
       <Card
         className={styles.card}
-        title="All Providers"
+        title="Pending Providers"
         classTitle={cn("title-red", styles.title)}
         classCardHead={cn(styles.head, { [styles.hidden]: visible })}
         head={
@@ -55,22 +56,26 @@ const ProviderList = () => {
           </>
         }
       >
-        <div className={cn(styles.row, { [styles.flex]: visible })}>
-          <Table
-            className={styles.table}
-            activeTable={visible}
-            setActiveTable={setVisible}
-            data={data}
-          />
-          <Details
-            className={styles.details}
-            onClose={() => setVisible(false)}
-          />
-        </div>
+        {data.filter(p => p.providerStatus === "Pending").length > 0 ? (
+          <div className={cn(styles.row, { [styles.flex]: visible })}>
+            <Table
+              className={styles.table}
+              activeTable={visible}
+              setActiveTable={setVisible}
+              data={data.filter(p => p.providerStatus === "Pending")}
+            />
+            <Details
+              className={styles.details}
+              onClose={() => setVisible(false)}
+            />
+          </div>
+        ) : (
+          <div className={styles.noPending}>No pending providers at this time.</div>
+        )}
       </Card>
       <Panel />
     </>
   );
 };
 
-export default ProviderList;
+export default PendingProviders;

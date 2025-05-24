@@ -15,6 +15,7 @@ const Sidebar = ({ className, onClose }) => {
     const [visibleHelp, setVisibleHelp] = useState(false);
     const [visible, setVisible] = useState(false);
     const [pendingCount, setPendingCount] = useState("0");
+    const [pendingProvidersCount, setPendingProvidersCount] = useState("0");
 
     const { pathname } = useLocation();
 
@@ -24,12 +25,23 @@ const Sidebar = ({ className, onClose }) => {
             setPendingCount(cached);
         }
         const q = query(collection(db, "camps"), where("campStatus", "==", "Pending"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        const unsubscribeCamps = onSnapshot(q, (snapshot) => {
             const count = snapshot.size.toString();
             setPendingCount(count);
             Cookies.set("pendingCount", count, { expires: 2 / 1440 }); // 2 minutes
         });
-        return () => unsubscribe();
+
+        const qProviders = query(collection(db, "providers"), where("providerStatus", "==", "Pending"));
+        const unsubscribeProviders = onSnapshot(qProviders, (snapshot) => {
+            const provCount = snapshot.size.toString();
+            setPendingProvidersCount(provCount);
+            Cookies.set("pendingProvidersCount", provCount, { expires: 2 / 1440 }); // 2 minutes
+        });
+
+        return () => {
+            unsubscribeCamps();
+            unsubscribeProviders();
+        };
     }, []);
 
     const navigation = [
@@ -84,6 +96,8 @@ const Sidebar = ({ className, onClose }) => {
                 {
                     title: "Pending",
                     url: "/admin/providers/pending",
+                    counter: pendingProvidersCount,
+                    colorCounter: "#FFBC99",
                 },
             
             ],
