@@ -1,28 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./Table.module.sass";
 import cn from "classnames";
 import Checkbox from "../../../components/Checkbox";
-import Loader from "../../../components/Loader";
 import Row from "./Row";
 
-// data
-import { fetchProviders } from "../../../mocks/providers";
-
-const Table = ({ className, activeTable, setActiveTable }) => {
-  const [providers, setProviders] = useState([]);
+const Table = ({ className, activeTable, setActiveTable, data }) => {
   const [activeId, setActiveId] = useState(null);
-
   const [chooseAll, setСhooseAll] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
-
-  useEffect(() => {
-    const loadProviders = async () => {
-      const data = await fetchProviders();
-      setProviders(data);
-      if (data.length > 0) setActiveId(data[0].id);
-    };
-    loadProviders();
-  }, []);
 
   const handleChange = (id) => {
     if (selectedFilters.includes(id)) {
@@ -50,22 +35,22 @@ const Table = ({ className, activeTable, setActiveTable }) => {
           <div className={styles.col}>State</div>
           <div className={styles.col}>Status</div>
         </div>
-        {Array.isArray(providers) && providers.map((x, index) => (
-          <Row
-            item={x}
-            key={index}
-            activeTable={activeTable}
-            setActiveTable={setActiveTable}
-            activeId={activeId}
-            setActiveId={setActiveId}
-            value={selectedFilters.includes(x.id)}
-            onChange={() => handleChange(x.id)}
-          />
-        ))}
+        {Array.isArray(data) && data
+          .filter(x => x.providerStatus === "Pending" || x.providerStatus === "Approved")
+          .map((x, index) => (
+            <Row
+              item={x}
+              key={x.id}
+              activeTable={activeTable}
+              setActiveTable={setActiveTable}
+              activeId={activeId}
+              setActiveId={setActiveId}
+              value={selectedFilters.includes(x.id)}
+              onChange={() => handleChange(x.id)}
+            />
+          ))}
       </div>
-      <div className={styles.foot}>
-        
-      </div>
+      <div className={styles.foot}></div>
     </div>
   );
 };

@@ -1,3 +1,23 @@
+// Add these styles to Row.module.sass
+// .statusChip
+//   display: inline-block
+//   padding: 0 12px
+//   border-radius: 16px
+//   font-size: 13px
+//   line-height: 26px
+//   font-weight: 600
+//   background: #eee
+//   color: #333
+//   margin: 0 auto
+//
+// .pending
+//   background: #ffe3cc
+//   color: #d97706
+//
+// .approved
+//   background: #dcfce7
+//   color: #059669
+
 import styles from "./Row.module.sass";
 import cn from "classnames";
 import Checkbox from "../../../../components/Checkbox";
@@ -45,10 +65,10 @@ const Row = ({
                         
                     >
                         <div className={styles.avatar}>
-                            <img src={item.avatar || "../../images/content/Camp_Image.png"} alt="Avatar" />
+                            <img src={item.avatar || "/images/content/Camp_Image.png"} alt="Avatar" />
                         </div>
                         <div className={styles.details}>
-                            <div className={styles.user}>{item.providerName}</div>
+                            <div className={styles.user}>{item.providerName || `${item.nameFirst || ""} ${item.nameLast || ""}`.trim()}</div>
                             <div className={styles.login}>{item.login}</div>
                             <div className={styles.email}>{item.email}</div>
                         </div>
@@ -59,7 +79,7 @@ const Row = ({
                 </div>
                 <div className={styles.col}>
                     <div className={styles.email}>
-                        {item.providerEmail}
+                        {item.providerEmail || item.email}
                     </div>
                 </div>
                 <div className={styles.col}>
@@ -69,7 +89,17 @@ const Row = ({
                     </div>
                 </div>
                 <div className={styles.col}>{item.providerState}</div>
-                <div className={styles.col}>{item.providerStatus}</div>
+                <div className={styles.col}>
+                  <span
+                    className={cn(
+                      styles.statusChip,
+                      item.providerStatus === "Pending" ? styles.pending : "",
+                      item.providerStatus === "Approved" ? styles.approved : ""
+                    )}
+                  >
+                    {item.providerStatus}
+                  </span>
+                </div>
             </div>
         </>
     );

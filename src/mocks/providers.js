@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
 import Cookies from "js-cookie";
-import { db } from "../firebase"; // correct import path to your initialized Firestore
+import { db } from "../firebase";
 
 export const fetchProviders = async () => {
   const cachedProviders = Cookies.get("cachedProviders");
@@ -9,13 +9,12 @@ export const fetchProviders = async () => {
   }
 
   const providerList = [];
-  let idCounter = 1;
 
   const querySnapshot = await getDocs(collection(db, "providers"));
   querySnapshot.forEach((doc) => {
     const data = doc.data();
     providerList.push({
-      id: idCounter++,
+      id: doc.id, // use Firestore doc ID here
       providerName: data.providerName || "",
       providerEmail: data.providerEmail || "",
       providerPhone: data.providerPhone || "",

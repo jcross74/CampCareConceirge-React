@@ -19,6 +19,17 @@ const ProviderList = () => {
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(false);
 
+  // Patched: filter against all possible field names
+  const filteredData = search
+    ? data.filter(provider =>
+        (provider.nameFirst && provider.nameFirst.toLowerCase().includes(search.toLowerCase())) ||
+        (provider.nameLast && provider.nameLast.toLowerCase().includes(search.toLowerCase())) ||
+        (provider.email && provider.email.toLowerCase().includes(search.toLowerCase())) ||
+        (provider.providerName && provider.providerName.toLowerCase().includes(search.toLowerCase())) ||
+        (provider.providerEmail && provider.providerEmail.toLowerCase().includes(search.toLowerCase()))
+      )
+    : data;
+
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "providers"), (snapshot) => {
       const providersData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -26,6 +37,11 @@ const ProviderList = () => {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    // Debug log: see what fields you have for search
+    console.log("Provider data from Firestore:", data);
+  }, [data]);
 
   const handleSubmit = (e) => {
     alert();
@@ -39,20 +55,18 @@ const ProviderList = () => {
         classTitle={cn("title-red", styles.title)}
         classCardHead={cn(styles.head, { [styles.hidden]: visible })}
         head={
-          <>
+          <form onSubmit={e => e.preventDefault()}>
             <Form
               className={styles.form}
               value={search}
               setValue={setSearch}
-              onSubmit={() => handleSubmit()}
+              onSubmit={e => e.preventDefault()}
               placeholder="Search by name or email"
               type="text"
               name="search"
               icon="search"
             />
-            
-            
-          </>
+          </form>
         }
       >
         <div className={cn(styles.row, { [styles.flex]: visible })}>
@@ -60,7 +74,7 @@ const ProviderList = () => {
             className={styles.table}
             activeTable={visible}
             setActiveTable={setVisible}
-            data={data}
+            data={filteredData}
           />
           <Details
             className={styles.details}
