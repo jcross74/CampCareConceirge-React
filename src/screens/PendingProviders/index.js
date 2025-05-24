@@ -4,7 +4,6 @@ import cn from "classnames";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
 import Filters from "../../components/Filters";
-
 import Table from "./Table";
 import Panel from "./Panel";
 import Details from "./Details";
@@ -20,17 +19,33 @@ const PendingProviders = () => {
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "providers"), (snapshot) => {
-      const providersData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-      setData(providersData);
-    });
-    return () => unsubscribe();
-  }, []);
+  // Patched: filter against all possible field names
+    const filteredData = search
+      ? data.filter(provider =>
+          (provider.nameFirst && provider.nameFirst.toLowerCase().includes(search.toLowerCase())) ||
+          (provider.nameLast && provider.nameLast.toLowerCase().includes(search.toLowerCase())) ||
+          (provider.email && provider.email.toLowerCase().includes(search.toLowerCase())) ||
+          (provider.providerName && provider.providerName.toLowerCase().includes(search.toLowerCase())) ||
+          (provider.providerEmail && provider.providerEmail.toLowerCase().includes(search.toLowerCase()))
+        )
+      : data;
+  
+    useEffect(() => {
+      const unsubscribe = onSnapshot(collection(db, "providers"), (snapshot) => {
+        const providersData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setData(providersData);
+      });
+      return () => unsubscribe();
+    }, []);
 
-  const handleSubmit = (e) => {
-    alert();
-  };
+  useEffect(() => {
+      // Debug log: see what fields you have for search
+      console.log("Provider data from Firestore:", data);
+    }, [data]);
+  
+    const handleSubmit = (e) => {
+      alert();
+    };
 
   return (
     <>
@@ -40,30 +55,28 @@ const PendingProviders = () => {
         classTitle={cn("title-red", styles.title)}
         classCardHead={cn(styles.head, { [styles.hidden]: visible })}
         head={
-          <>
+          <form onSubmit={e => e.preventDefault()}>
             <Form
               className={styles.form}
               value={search}
               setValue={setSearch}
-              onSubmit={() => handleSubmit()}
+              onSubmit={e => e.preventDefault()}
               placeholder="Search by name or email"
               type="text"
               name="search"
               icon="search"
             />
-            
-            
-          </>
+          </form>
         }
       >
         {data.filter(p => p.providerStatus === "Pending").length > 0 ? (
           <div className={cn(styles.row, { [styles.flex]: visible })}>
             <Table
-              className={styles.table}
-              activeTable={visible}
-              setActiveTable={setVisible}
-              data={data.filter(p => p.providerStatus === "Pending")}
-            />
+  className={styles.table}
+  activeTable={visible}
+  setActiveTable={setVisible}
+  data={filteredData.filter(p => p.providerStatus === "Pending")}
+/>
             <Details
               className={styles.details}
               onClose={() => setVisible(false)}

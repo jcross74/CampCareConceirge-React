@@ -57,6 +57,7 @@ const Sidebar = ({ className, onClose }) => {
             icon: "faCamps",
             viewBox: "0 0 576 512",
             add: true,
+            addUrl: "/admin/camps/add",
             dropdown: [
                 {
                     title: "Overview",
@@ -88,6 +89,7 @@ const Sidebar = ({ className, onClose }) => {
             icon: "faProviders",
             viewBox: "0 0 512 512",
             add: true,
+            addUrl: "/admin/providers/add",
             dropdown: [
                 {
                     title: "Overview",

@@ -4,7 +4,7 @@ import styles from "./Dropdown.module.sass";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import Icon from "../../Icon";
 
-const Dropdown = ({ className, item: { icon, title, dropdown, add, slug, viewBox }, visibleSidebar, setValue, onClose }) => {
+const Dropdown = ({ className, item: { icon, title, dropdown, add, addUrl, slug, viewBox }, visibleSidebar, setValue, onClose }) => {
     const [visible, setVisible] = useState(false);
 
     const { pathname } = useLocation();
@@ -48,16 +48,16 @@ const Dropdown = ({ className, item: { icon, title, dropdown, add, slug, viewBox
             {add ? (
                 <div
                     className={cn(styles.top, {
-                        [styles.active]: pathname.startsWith("/admin/camps/add"),
+                        [styles.active]: pathname.startsWith(addUrl || "/admin/camps/add"),
                     })}
                 >
                     <Head />
                     <Link
                         className={cn(styles.add, {
                             [styles.active]:
-                                pathname.startsWith("/admin/camps/add"),
+                                pathname.startsWith(addUrl || "/admin/camps/add"),
                         })}
-                        to="/admin/camps/add"
+                        to={addUrl || "/admin/camps/add"}
                         onClick={onClose}
                     >
                        <Icon name="faPlus" size="24" viewBox="0 0 512 512" />

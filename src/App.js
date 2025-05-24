@@ -19,7 +19,7 @@ import Drafts from "./screens/PendingCamps";
 import Released from "./screens/Released";
 import Comments from "./screens/Comments";
 import Scheduled from "./screens/Scheduled";
-import Customers from "./screens/Customers";
+import NewProvider from "./screens/NewProvider";
 import ProviderList from "./screens/ProviderList";
 import PendingProviders from "./screens/PendingProviders";
 import Promote from "./screens/Promote";
@@ -183,6 +183,15 @@ function App() {
             element={
               <Page title="Providers">
                 <ProviderList />
+              </Page>
+            }
+          />
+
+          <Route
+            path="/admin/providers/add"
+            element={
+              <Page title="Add Provider">
+                <NewProvider />
               </Page>
             }
           />
