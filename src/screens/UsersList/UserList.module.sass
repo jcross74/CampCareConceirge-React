@@ -72,3 +72,46 @@
                 display: none
         .details
             display: block
+
+.pagination
+    display: flex
+    justify-content: center
+    margin-top: 16px
+
+    button
+        margin: 0 8px
+        padding: 16px 24px
+        +caption1
+        background: none
+        border: 1px solid $n3
+        border-radius: 4px
+        cursor: pointer
+        &:disabled
+            opacity: 0.5
+            cursor: default
+
+    span
+        font-size: 1em
+        color: $n4
+        margin: 0 8px
+        align-content: center
+
+.searchAndFilterRow
+  display: flex
+  align-items: center
+  gap: 12px
+
+.searchForm
+  flex: 1
+
+.openFiltersButton
+  background: none
+  border: none
+  padding: 0 0 0 6px
+  cursor: pointer
+  display: flex
+  align-items: center
+  justify-content: center
+  transition: opacity 0.15s
+  &:hover
+    opacity: 0.7

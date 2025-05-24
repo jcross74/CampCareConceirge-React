@@ -39,7 +39,10 @@ const Row = ({
                         
                     >
                         <div className={styles.avatar}>
-                            <img src={item.avatar} alt="Avatar" />
+                            <img
+                              src={item.avatar || "/images/content/Camp_Image.png"}
+                              alt="Avatar"
+                            />
                         </div>
                         <div className={styles.details}>
                             <div className={styles.user}>{item.nameFirst} {item.nameLast}</div>
@@ -53,7 +56,11 @@ const Row = ({
                 </div>
                 
                 <div className={styles.col}>
-                <div className={styles.label}>{item.memberSince}</div>
+                <div className={styles.label}>
+                  {item.memberSince && item.memberSince.toDate
+                    ? item.memberSince.toDate().toLocaleDateString()
+                    : ""}
+                </div>
                     
                 </div>
                 

@@ -239,13 +239,13 @@ const EditCamp = () => {
         <div style={{ padding: "2rem", textAlign: "center" }}>
           <h2>Camp Updated</h2>
           <p>Camp updated successfully!</p>
-          <button
+          <button 
             type="button"
             onClick={() => {
               setShowSuccessModal(false);
               navigate("/admin/camps/dashboard");
             }}
-            style={{ marginTop: "1rem" }}
+            className={styles.modalButton}
           >
             OK
           </button>

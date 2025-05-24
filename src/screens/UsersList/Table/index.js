@@ -1,27 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./Table.module.sass";
 import cn from "classnames";
 import Checkbox from "../../../components/Checkbox";
 import Loader from "../../../components/Loader";
 import Row from "./Row";
 
-// data
-import { fetchUsers } from "../../../mocks/users";
-
-const Table = ({ className, activeTable, setActiveTable }) => {
+const Table = ({ className, activeTable, setActiveTable, data = [] }) => {
   const [chooseAll, setChooseAll] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const getUsers = async () => {
-      const data = await fetchUsers();
-      setUsers(data);
-      if (data.length > 0) setActiveId(data[0].id);
-    };
-    getUsers();
-  }, []);
 
   const handleChange = (id) => {
     if (selectedFilters.includes(id)) {
@@ -46,7 +33,7 @@ const Table = ({ className, activeTable, setActiveTable }) => {
           <div className={styles.col}>Email</div>
           <div className={styles.col}>Member Since</div>
         </div>
-        {users.map((x, index) => (
+        {data.map((x, index) => (
           <Row
             item={x}
             key={index}
